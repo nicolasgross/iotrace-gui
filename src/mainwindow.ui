@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>795</width>
+    <height>493</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>600</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>iotrace-GUI</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>6</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="accumulated">
+       <attribute name="title">
+        <string>File Statistics</string>
+       </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QListWidget" name="listWidget">
+          <property name="maximumSize">
+           <size>
+            <width>250</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="tableWidget">
+          <row>
+           <property name="text">
+            <string>New Row</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>O Count</string>
+           </property>
+           <property name="toolTip">
+            <string>Count of all 'open' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>137</red>
+             <green>193</green>
+             <blue>211</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>O Total</string>
+           </property>
+           <property name="toolTip">
+            <string>Total time spent in all 'open' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>137</red>
+             <green>193</green>
+             <blue>211</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>O Average</string>
+           </property>
+           <property name="toolTip">
+            <string>Average time spent in a single 'open' call</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>137</red>
+             <green>193</green>
+             <blue>211</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>O Min</string>
+           </property>
+           <property name="toolTip">
+            <string>Minimum time spent in a single 'open' call</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>137</red>
+             <green>193</green>
+             <blue>211</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>O Max</string>
+           </property>
+           <property name="toolTip">
+            <string>Maximum time spent in a single 'open' call</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>137</red>
+             <green>193</green>
+             <blue>211</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>C Count</string>
+           </property>
+           <property name="toolTip">
+            <string>Count of all 'close' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>136</red>
+             <green>203</green>
+             <blue>158</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>C Total</string>
+           </property>
+           <property name="toolTip">
+            <string>Total time spent in all 'close' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>136</red>
+             <green>203</green>
+             <blue>158</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>C Average</string>
+           </property>
+           <property name="toolTip">
+            <string>Average time spent in a single 'close' call</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>136</red>
+             <green>203</green>
+             <blue>158</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>C Min</string>
+           </property>
+           <property name="toolTip">
+            <string>Minimum time spent in a single 'close' call</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>136</red>
+             <green>203</green>
+             <blue>158</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>C Max</string>
+           </property>
+           <property name="toolTip">
+            <string>Maximum time spent in a single 'close' call</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>136</red>
+             <green>203</green>
+             <blue>158</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>R Bytes</string>
+           </property>
+           <property name="toolTip">
+            <string>Total bytes read in all 'read' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>152</red>
+             <green>234</green>
+             <blue>234</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>R Total</string>
+           </property>
+           <property name="toolTip">
+            <string>Total time spent in all 'read' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>152</red>
+             <green>234</green>
+             <blue>234</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>R Average</string>
+           </property>
+           <property name="toolTip">
+            <string>Average read speed among all 'read' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>152</red>
+             <green>234</green>
+             <blue>234</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>R Min</string>
+           </property>
+           <property name="toolTip">
+            <string>Minimum read speed among all 'read' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>152</red>
+             <green>234</green>
+             <blue>234</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>R Max</string>
+           </property>
+           <property name="toolTip">
+            <string>Maximum read speed among all 'read' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>152</red>
+             <green>234</green>
+             <blue>234</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>W Bytes</string>
+           </property>
+           <property name="toolTip">
+            <string>Total bytes written in all 'write' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>196</red>
+             <green>180</green>
+             <blue>255</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>W Total</string>
+           </property>
+           <property name="toolTip">
+            <string>Total time spent in all 'write' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>196</red>
+             <green>180</green>
+             <blue>255</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>W Average</string>
+           </property>
+           <property name="toolTip">
+            <string>Average write speed among all 'write' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>196</red>
+             <green>180</green>
+             <blue>255</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>W Min</string>
+           </property>
+           <property name="toolTip">
+            <string>Minimum write speed among all 'write' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>196</red>
+             <green>180</green>
+             <blue>255</blue>
+            </color>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>W Max</string>
+           </property>
+           <property name="toolTip">
+            <string>Maximum write speed among all 'write' calls</string>
+           </property>
+           <property name="background">
+            <color>
+             <red>196</red>
+             <green>180</green>
+             <blue>255</blue>
+            </color>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="syscalls">
+       <attribute name="title">
+        <string>Unconsidered Syscalls</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTableWidget" name="tableWidget_2">
+          <row>
+           <property name="text">
+            <string>New Row</string>
+           </property>
+          </row>
+          <column>
+           <property name="text">
+            <string>Count</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Total Time</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>795</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menutest">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen"/>
+    <addaction name="actionOpen_recent"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionColumns"/>
+   </widget>
+   <addaction name="menutest"/>
+   <addaction name="menuView"/>
+   <addaction name="menuAbout"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionQuit">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionOpen_recent">
+   <property name="text">
+    <string>Open Recent</string>
+   </property>
+  </action>
+  <action name="actionColumns">
+   <property name="text">
+    <string>Columns</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
