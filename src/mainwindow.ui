@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>795</width>
+    <width>800</width>
     <height>493</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
+    <width>800</width>
     <height>300</height>
    </size>
   </property>
@@ -37,11 +37,11 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="accumulated">
+      <widget class="QWidget" name="fileStatistics">
        <attribute name="title">
         <string>File Statistics</string>
        </attribute>
@@ -62,7 +62,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QListWidget" name="listWidget">
+         <widget class="QListWidget" name="processesList">
           <property name="maximumSize">
            <size>
             <width>250</width>
@@ -72,12 +72,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableWidget">
-          <row>
-           <property name="text">
-            <string>New Row</string>
-           </property>
-          </row>
+         <widget class="QTableWidget" name="fileStatsTable">
           <column>
            <property name="text">
             <string>O Count</string>
@@ -386,29 +381,9 @@
        <attribute name="title">
         <string>Unconsidered Syscalls</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QTableWidget" name="tableWidget_2">
-          <row>
-           <property name="text">
-            <string>New Row</string>
-           </property>
-          </row>
+         <widget class="QTableWidget" name="syscallsTable">
           <column>
            <property name="text">
             <string>Count</string>
@@ -432,20 +407,20 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>795</width>
+     <width>800</width>
      <height>26</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menutest">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
     <addaction name="actionOpen"/>
-    <addaction name="actionOpen_recent"/>
+    <addaction name="actionOpenRecent"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
-   <widget class="QMenu" name="menuAbout">
+   <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
     </property>
@@ -457,9 +432,9 @@
     </property>
     <addaction name="actionColumns"/>
    </widget>
-   <addaction name="menutest"/>
+   <addaction name="menuFile"/>
    <addaction name="menuView"/>
-   <addaction name="menuAbout"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
@@ -477,7 +452,7 @@
     <string>About</string>
    </property>
   </action>
-  <action name="actionOpen_recent">
+  <action name="actionOpenRecent">
    <property name="text">
     <string>Open Recent</string>
    </property>
