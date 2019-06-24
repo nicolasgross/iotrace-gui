@@ -21,6 +21,21 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>6</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
@@ -30,6 +45,184 @@
        <attribute name="title">
         <string>File Statistics Accumulated</string>
        </attribute>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTableWidget" name="tableWidget">
+          <column>
+           <property name="text">
+            <string>O Count</string>
+           </property>
+           <property name="toolTip">
+            <string>Count of all 'open' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>O Total</string>
+           </property>
+           <property name="toolTip">
+            <string>Total time spent in all 'open' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>O Average</string>
+           </property>
+           <property name="toolTip">
+            <string>Average time spent in a single 'open' call</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>O Min</string>
+           </property>
+           <property name="toolTip">
+            <string>Minimum time spent in a single 'open' call</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>O Max</string>
+           </property>
+           <property name="toolTip">
+            <string>Maximum time spent in a single 'open' call</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>C Count</string>
+           </property>
+           <property name="toolTip">
+            <string>Count of all 'close' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>C Total</string>
+           </property>
+           <property name="toolTip">
+            <string>Total time spent in all 'close' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>C Average</string>
+           </property>
+           <property name="toolTip">
+            <string>Average time spent in a single 'close' call</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>C Min</string>
+           </property>
+           <property name="toolTip">
+            <string>Minimum time spent in a single 'close' call</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>C Max</string>
+           </property>
+           <property name="toolTip">
+            <string>Maximum time spent in a single 'close' call</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>R Bytes</string>
+           </property>
+           <property name="toolTip">
+            <string>Total bytes read in all 'read' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>R Total</string>
+           </property>
+           <property name="toolTip">
+            <string>Total time spent in all 'read' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>R Average</string>
+           </property>
+           <property name="toolTip">
+            <string>Average read speed among all 'read' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>R Min</string>
+           </property>
+           <property name="toolTip">
+            <string>Minimum read speed among all 'read' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>R Max</string>
+           </property>
+           <property name="toolTip">
+            <string>Maximum read speed among all 'read' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>W Bytes</string>
+           </property>
+           <property name="toolTip">
+            <string>Total bytes written in all 'write' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>W Total</string>
+           </property>
+           <property name="toolTip">
+            <string>Total time spent in all 'write' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>W Average</string>
+           </property>
+           <property name="toolTip">
+            <string>Average write speed among all 'write' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>W Min</string>
+           </property>
+           <property name="toolTip">
+            <string>Minimum write speed among all 'write' calls</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>W Max</string>
+           </property>
+           <property name="toolTip">
+            <string>Maximum write speed among all 'write' calls</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="perprocess">
        <attribute name="title">
