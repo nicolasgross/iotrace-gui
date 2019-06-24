@@ -5,19 +5,22 @@ from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QApplication
 from PySide2.QtCore import QFile
 
+
+def initGui(window):
+    window.actionQuit.triggered.connect(QApplication.closeAllWindows)
+
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    ui_file = QFile("mainwindow.ui")
-    ui_file.open(QFile.ReadOnly)
+    uiFile = QFile("mainwindow.ui")
+    uiFile.open(QFile.ReadOnly)
 
-    loader = QUiLoader()
-    window = loader.load(ui_file)
-    ui_file.close()
+    window = QUiLoader().load(uiFile)
+    uiFile.close()
 
-    # init
+    initGui(window)
 
     window.show()
-
     sys.exit(app.exec_())
 
