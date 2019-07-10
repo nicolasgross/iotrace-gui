@@ -62,7 +62,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QListWidget" name="processesList">
+         <widget class="QListView" name="processesListView">
           <property name="maximumSize">
            <size>
             <width>250</width>

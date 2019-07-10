@@ -1,16 +1,20 @@
 import os
 import json
 
+from iotracegui.model.processes_model import ProcessesModel
+
 
 class Model:
     def __init__(self, files):
-        if files:
-            self.updateFiles(files)
-        else:
-            self.__procStats = {}  # dict ((host, rank) -> stats)
+        self.updateFiles(files)
 
     def updateFiles(self, files):
-        newStats = self.__readStats(files)
+        newStats = {}  # dict ((host, rank) -> stats)
+        if files:
+            newStats = self.__readStats(files)
+            self.procsModel = ProcessesModel([*newStats])
+        else:
+            self.procsModel = ProcessesModel([])
         self.__procStats = newStats
         self.__files = files
         # TODO update list and table models (refresh observed values)

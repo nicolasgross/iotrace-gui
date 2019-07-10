@@ -1,8 +1,8 @@
 import sys
 from PySide2.QtWidgets import QApplication
 
-from iotracegui.mainwindow import MainWindow
-from iotracegui.model import Model
+from iotracegui.main_window import MainWindow
+from iotracegui.model.model import Model
 
 
 if __name__ == "__main__":
