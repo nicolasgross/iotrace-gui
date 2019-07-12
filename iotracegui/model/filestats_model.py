@@ -1,0 +1,84 @@
+from PySide2.QtCore import Qt, QAbstractTableModel, QModelIndex
+
+
+class FilestatsModel (QAbstractTableModel):
+
+    columnMapping = {
+            **dict.fromkeys(range(0, 5), 'open'),
+            **dict.fromkeys(range(5, 10), 'close'),
+            **dict.fromkeys(range(10, 15), 'read'),
+            **dict.fromkeys(range(15, 20), 'write')
+        }
+
+    columnNames = [
+            'O Count', 'O Total', 'O Average', 'O Min', 'O Max',
+            'C Count', 'C Total', 'C Average', 'C Min', 'C Max',
+            'R Bytes', 'R Total', 'R Average', 'R Min', 'R Max',
+            'W Bytes', 'W Total', 'W Average', 'W Min', 'W Max'
+        ]
+
+    columnTooltips = [
+            'Count of all \'open\' calls',
+            'Total time spent in all \'open\' calls',
+            'Average time spent in a single \'open\' call',
+            'Minimum time spent in a single \'open\' call',
+            'Maximum time spent in a single \'open\' call',
+
+            'Count of all \'close\' calls',
+            'Total time spent in all \'close\' calls',
+            'Average time spent in a single \'close\' call',
+            'Minimum time spent in a single \'close\' call',
+            'Maximum time spent in a single \'close\' call',
+
+            'Total bytes read in all \'read\' calls',
+            'Total time spent in all \'read\' calls',
+            'Average read speed among all \'read\' calls',
+            'Minimum read speed among all \'read\' calls',
+            'Maximum read speed among all \'read\' calls'
+
+            'Total bytes written in all \'write\' calls',
+            'Total time spent in all \'write\' calls',
+            'Average write speed among all \'write\' calls',
+            'Minimum write speed among all \'write\' calls',
+            'Maximum write speed among all \'write\' calls'
+        ]
+
+    # TODO somehow provide units of measurement
+
+    def __init__(self, filestats, parent=None):
+        QAbstractTableModel.__init__(self, parent)
+        self.__filestats = filestats
+
+    def rowCount(self, parent=QModelIndex()):
+        return len(self.__filestats)
+
+    def columnCount(self, parent=QModelIndex()):
+        return 20
+
+    def data(self, index, role):
+        if (not index.isValid() or index.column() >= self.columnCount() or
+                index.row() >= self.rowCount() or role != Qt.DisplayRole):
+            return None
+        else:
+            fStat = self.__filestats[index.row()]
+            subStat = fStat[FilestatsModel.columnMapping[index.column()]]
+            if index.column() % 5 < 2:
+                return subStat[index.column() % 5]
+            elif index.column() % 5 > 2:
+                return subStat[(index.column() % 5) - 1]
+            else:
+                return 0  # TODO
+
+    def headerData(self, section, orientation, role):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                return self.columnNames[section]
+            else:
+                return self.__filestats[section]["filename"]
+        elif role == Qt.ToolTipRole:
+            if orientation == Qt.Horizontal:
+                return self.columnTooltips[section]
+            else:
+                return None
+        else:
+            return None

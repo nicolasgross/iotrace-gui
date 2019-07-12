@@ -1,7 +1,7 @@
 import sys
 from PySide2.QtWidgets import QApplication
 
-from iotracegui.main_window import MainWindow
+from iotracegui.view.main_window import MainWindow
 from iotracegui.model.model import Model
 
 
