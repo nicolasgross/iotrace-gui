@@ -28,7 +28,7 @@
      <number>0</number>
     </property>
     <property name="topMargin">
-     <number>0</number>
+     <number>5</number>
     </property>
     <property name="rightMargin">
      <number>0</number>
@@ -47,19 +47,19 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <property name="spacing">
-         <number>0</number>
+         <number>5</number>
         </property>
         <property name="leftMargin">
-         <number>0</number>
+         <number>5</number>
         </property>
         <property name="topMargin">
-         <number>0</number>
+         <number>5</number>
         </property>
         <property name="rightMargin">
-         <number>0</number>
+         <number>5</number>
         </property>
         <property name="bottomMargin">
-         <number>0</number>
+         <number>5</number>
         </property>
         <item>
          <widget class="QListView" name="processesListView">
@@ -72,7 +72,33 @@
          </widget>
         </item>
         <item>
-         <widget class="QTableView" name="filestatsTableView"/>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>5</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLineEdit" name="filestatsLineEdit">
+            <property name="placeholderText">
+             <string>Filename filter</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableView" name="filestatsTableView"/>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -86,6 +112,21 @@
         <string>Unconsidered Syscalls</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
         <item>
          <widget class="QTableWidget" name="syscallsTable">
           <column>
