@@ -11,10 +11,14 @@ class FilestatsModel (QAbstractTableModel):
         }
 
     columnNames = [
-            'O Count', 'O Total', 'O Average', 'O Min', 'O Max',
-            'C Count', 'C Total', 'C Average', 'C Min', 'C Max',
-            'R Bytes', 'R Total', 'R Average', 'R Min', 'R Max',
-            'W Bytes', 'W Total', 'W Average', 'W Min', 'W Max'
+            'O Count (#)', 'O Total (ms)', 'O Avg (ms)', 'O Min (ms)',
+            'O Max(ms)',
+            'C Count (#)', 'C Total (ms)', 'C Avg (ms)', 'C Min (ms)',
+            'C Max(ms)',
+            'R Bytes', 'R Total (ms)', 'R Avg (MB/s)', 'R Min (MB/s)',
+            'R Max (MB/s)',
+            'W Bytes', 'W Total (ms)', 'W Avg (MB/s)', 'W Min (MB/s)',
+            'W Max (MB/s)',
         ]
 
     columnTooltips = [
@@ -43,8 +47,6 @@ class FilestatsModel (QAbstractTableModel):
             'Maximum write speed among all \'write\' calls'
         ]
 
-    # TODO somehow provide units of measurement
-
     def __init__(self, filestats, parent=None):
         QAbstractTableModel.__init__(self, parent)
         self.__filestats = filestats
@@ -62,12 +64,25 @@ class FilestatsModel (QAbstractTableModel):
         else:
             fStat = self.__filestats[index.row()]
             subStat = fStat[FilestatsModel.columnMapping[index.column()]]
-            if index.column() % 5 < 2:
-                return subStat[index.column() % 5]
-            elif index.column() % 5 > 2:
-                return subStat[(index.column() % 5) - 1]
-            else:
-                return 0  # TODO
+            relativeColumn = index.column() % 5
+            if relativeColumn == 0:
+                return subStat[relativeColumn]
+            elif relativeColumn == 1:
+                return subStat[relativeColumn] / 1000000.0
+            elif relativeColumn == 2:
+                if index.column() < 10:
+                    if subStat[0] == 0:
+                        return 0
+                    else:
+                        return (subStat[1] / 1000000.0) / subStat[0]
+                else:
+                    if subStat[1] == 0:
+                        return 0
+                    else:
+                        return (subStat[0] / 1000000.0) / \
+                                (subStat[1] / 1000000000.0)
+            elif relativeColumn > 2:
+                return subStat[relativeColumn - 1] / 1000000.0
 
     def headerData(self, section, orientation, role):
         if role == Qt.DisplayRole:
