@@ -1,4 +1,5 @@
-from PySide2.QtCore import Qt, QAbstractTableModel, QModelIndex
+from PySide2.QtCore import Qt, QAbstractTableModel, QModelIndex, \
+        QSortFilterProxyModel
 
 
 class FilestatsModel (QAbstractTableModel):
@@ -38,7 +39,7 @@ class FilestatsModel (QAbstractTableModel):
             'Total time spent in all \'read\' calls',
             'Average read speed among all \'read\' calls',
             'Minimum read speed among all \'read\' calls',
-            'Maximum read speed among all \'read\' calls'
+            'Maximum read speed among all \'read\' calls',
 
             'Total bytes written in all \'write\' calls',
             'Total time spent in all \'write\' calls',
@@ -97,3 +98,9 @@ class FilestatsModel (QAbstractTableModel):
                 return None
         else:
             return None
+
+
+class FilestatsSortFilterProxyModel (QSortFilterProxyModel):
+
+    def __init__(self, parent=None):
+        QSortFilterProxyModel.__init__(self, parent)

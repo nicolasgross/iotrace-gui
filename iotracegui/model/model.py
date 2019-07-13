@@ -3,7 +3,8 @@ import json
 from PySide2.QtCore import QObject, Signal
 
 from iotracegui.model.processes_model import ProcessesModel
-from iotracegui.model.filestats_model import FilestatsModel
+from iotracegui.model.filestats_model import FilestatsModel, \
+        FilestatsSortFilterProxyModel
 
 
 class Model (QObject):
@@ -34,8 +35,10 @@ class Model (QObject):
             newStats = self.__parseFiles(files)
             newProcs = [*newStats]
             for proc, stat in newStats.items():
-                newFilestatModels[proc] = FilestatsModel(
-                        stat["file statistics"])
+                fstatModel = FilestatsModel(stat["file statistics"])
+                proxyFstatModel = FilestatsSortFilterProxyModel()
+                proxyFstatModel.setSourceModel(fstatModel)
+                newFilestatModels[proc] = proxyFstatModel
 
         self.procsModel = ProcessesModel(newProcs)
         self.__filestatModels = newFilestatModels

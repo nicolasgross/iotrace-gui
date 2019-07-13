@@ -96,7 +96,11 @@
            </widget>
           </item>
           <item>
-           <widget class="QTableView" name="filestatsTableView"/>
+           <widget class="QTableView" name="filestatsTableView">
+            <property name="sortingEnabled">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </item>

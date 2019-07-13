@@ -6,6 +6,7 @@ class FilestatsTab:
         self.__window = window
         self.__model = model
         self.__model.filesLoaded.connect(self.__refreshData)
+        # self.__window.filestatsLineEdit.textChanged.connect()  # TODO
         self.__refreshData()
 
     @Slot()
