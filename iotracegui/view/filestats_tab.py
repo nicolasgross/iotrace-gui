@@ -2,6 +2,7 @@ from PySide2.QtCore import Qt, Slot, QRegularExpression
 
 
 class FilestatsTab:
+
     def __init__(self, window, model):
         self.__window = window
         self.__model = model

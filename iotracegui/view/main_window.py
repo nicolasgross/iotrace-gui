@@ -7,6 +7,7 @@ from iotracegui.view.filestats_tab import FilestatsTab
 
 
 class MainWindow:
+
     def __init__(self, app, model):
         self.__app = app
         self.__model = model

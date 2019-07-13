@@ -2,6 +2,7 @@ from PySide2.QtCore import Qt, QAbstractListModel, QModelIndex
 
 
 class ProcessesModel (QAbstractListModel):
+
     def __init__(self, procs, parent=None):
         QAbstractListModel.__init__(self, parent)
         self.__procs = procs
