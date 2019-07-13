@@ -104,3 +104,14 @@ class FilestatsSortFilterProxyModel (QSortFilterProxyModel):
 
     def __init__(self, parent=None):
         QSortFilterProxyModel.__init__(self, parent)
+
+    def filterAcceptsColumn(self, column, parent):
+        return True
+
+    def filterAcceptsRow(self, row, parent):
+        regex = self.filterRegularExpression()
+        fName = self.sourceModel().headerData(row, Qt.Vertical, Qt.DisplayRole)
+        if fName and regex.isValid():
+            return regex.match(fName).hasMatch()
+        else:
+            return False

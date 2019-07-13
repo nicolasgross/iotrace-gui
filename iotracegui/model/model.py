@@ -13,6 +13,8 @@ class Model (QObject):
 
     def __init__(self, files):
         QObject.__init__(self)
+        self.__procsModel = None
+        self.__filestatModels = None
         self.setFiles(files)
 
     def __parseFiles(self, files):
@@ -40,6 +42,13 @@ class Model (QObject):
                 proxyFstatModel.setSourceModel(fstatModel)
                 newFilestatModels[proc] = proxyFstatModel
 
+        # destruct manually because signals are still connected
+        if self.__filestatModels:
+            for proc, fstatModel in self.__filestatModels.items():
+                del fstatModel
+        if self.__procsModel:
+            del self.__procsModel
+
         self.procsModel = ProcessesModel(newProcs)
         self.__filestatModels = newFilestatModels
         self.__files = files
@@ -48,3 +57,6 @@ class Model (QObject):
 
     def getFilestatModel(self, proc):
         return self.__filestatModels[proc]
+
+    def getProcs(self):
+        return self.procsModel.getProcs()

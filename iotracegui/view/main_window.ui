@@ -91,7 +91,7 @@
           <item>
            <widget class="QLineEdit" name="filestatsLineEdit">
             <property name="placeholderText">
-             <string>Filename filter</string>
+             <string>Filename filter (Perl regex)</string>
             </property>
            </widget>
           </item>

@@ -6,14 +6,18 @@ class FilestatsTab:
         self.__window = window
         self.__model = model
         self.__model.filesLoaded.connect(self.__refreshData)
-        # self.__window.filestatsLineEdit.textChanged.connect()  # TODO
         self.__refreshData()
+        # TODO red invalid regex
 
     @Slot()
     def __refreshData(self):
         self.__window.processesListView.setModel(self.__model.procsModel)
         self.__window.processesListView.selectionModel(). \
             currentChanged.connect(self.__showSelectedProc)
+        for proc in self.__model.getProcs():
+            filestatModel = self.__model.getFilestatModel(proc)
+            self.__window.filestatsLineEdit.textChanged.connect(
+                    filestatModel.setFilterRegularExpression)
 
     @Slot()
     def __showSelectedProc(self, current, previous):

@@ -28,3 +28,6 @@ class ProcessesModel (QAbstractListModel):
             return f"Column {section}"
         else:
             return f"Row {section}"
+
+    def getProcs(self):
+        return self.__procs
