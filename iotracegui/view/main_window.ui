@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>493</height>
+    <width>988</width>
+    <height>532</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -34,7 +34,7 @@
      <number>5</number>
     </property>
     <property name="bottomMargin">
-     <number>0</number>
+     <number>5</number>
     </property>
     <item>
      <widget class="QListView" name="processesListView">
@@ -55,7 +55,7 @@
        <attribute name="title">
         <string>File Statistics</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QVBoxLayout" name="verticalLayout">
         <property name="spacing">
          <number>5</number>
         </property>
@@ -72,37 +72,18 @@
          <number>5</number>
         </property>
         <item>
-         <layout class="QVBoxLayout" name="fstatVerticalLayout">
-          <property name="spacing">
-           <number>5</number>
+         <widget class="QLineEdit" name="filestatsLineEdit">
+          <property name="placeholderText">
+           <string>Filename filter (Perl regex)</string>
           </property>
-          <property name="leftMargin">
-           <number>0</number>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableView" name="filestatsTableView">
+          <property name="sortingEnabled">
+           <bool>true</bool>
           </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QLineEdit" name="filestatsLineEdit">
-            <property name="placeholderText">
-             <string>Filename filter (Perl regex)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QTableView" name="filestatsTableView">
-            <property name="sortingEnabled">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -110,12 +91,7 @@
        <attribute name="title">
         <string>Read/Write Blocks</string>
        </attribute>
-      </widget>
-      <widget class="QWidget" name="syscalls">
-       <attribute name="title">
-        <string>Unconsidered Syscalls</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
         <property name="spacing">
          <number>5</number>
         </property>
@@ -132,25 +108,67 @@
          <number>5</number>
         </property>
         <item>
-         <layout class="QVBoxLayout" name="scVerticalLayout">
+         <layout class="QVBoxLayout" name="rwVerticalLayout">
           <property name="spacing">
            <number>5</number>
           </property>
           <item>
-           <widget class="QLineEdit" name="syscallsLineEdit">
+           <widget class="QLineEdit" name="rwLineEdit">
             <property name="placeholderText">
-             <string>Syscall filter (Perl regex)</string>
+             <string>Filename filter (Perl regex)</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QTableView" name="syscallsTableView">
-            <property name="sortingEnabled">
-             <bool>true</bool>
-            </property>
-           </widget>
+           <widget class="QListView" name="rwListView"/>
           </item>
          </layout>
+        </item>
+        <item>
+         <widget class="QTableView" name="rwTableView">
+          <property name="maximumSize">
+           <size>
+            <width>300</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="syscalls">
+       <attribute name="title">
+        <string>Unconsidered Syscalls</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>5</number>
+        </property>
+        <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
+        <item>
+         <widget class="QLineEdit" name="syscallsLineEdit">
+          <property name="placeholderText">
+           <string>Syscall filter (Perl regex)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableView" name="syscallsTableView">
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -163,7 +181,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>988</width>
      <height>26</height>
     </rect>
    </property>
@@ -192,7 +210,6 @@
    <addaction name="menuView"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
    <property name="text">
     <string>Open</string>
