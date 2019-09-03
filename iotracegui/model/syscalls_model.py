@@ -1,5 +1,4 @@
-from PySide2.QtCore import Qt, QAbstractTableModel, QModelIndex, \
-        QSortFilterProxyModel
+from PySide2.QtCore import Qt, QAbstractTableModel, QModelIndex
 
 
 class SyscallsModel (QAbstractTableModel):
@@ -53,21 +52,3 @@ class SyscallsModel (QAbstractTableModel):
                 return None
         else:
             return None
-
-
-class SyscallsSortFilterProxyModel (QSortFilterProxyModel):
-
-    def __init__(self, parent=None):
-        QSortFilterProxyModel.__init__(self, parent)
-
-    def filterAcceptsColumn(self, column, parent):
-        return True
-
-    def filterAcceptsRow(self, row, parent):
-        regex = self.filterRegularExpression()
-        scName = self.sourceModel().headerData(row, Qt.Vertical,
-                                               Qt.DisplayRole)
-        if scName and regex.isValid():
-            return regex.match(scName).hasMatch()
-        else:
-            return False

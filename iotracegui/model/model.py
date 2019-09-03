@@ -1,12 +1,10 @@
 import os
 import json
-from PySide2.QtCore import QObject, Signal
+from PySide2.QtCore import QObject, Signal, Qt, QSortFilterProxyModel
 
 from iotracegui.model.processes_model import ProcessesModel
-from iotracegui.model.filestats_model import FilestatsModel, \
-        FilestatsSortFilterProxyModel
-from iotracegui.model.syscalls_model import SyscallsModel, \
-        SyscallsSortFilterProxyModel
+from iotracegui.model.filestats_model import FilestatsModel
+from iotracegui.model.syscalls_model import SyscallsModel
 
 
 class Model (QObject):
@@ -41,11 +39,11 @@ class Model (QObject):
             newProcs = [*newStats]
             for proc, stat in newStats.items():
                 fstatsModel = FilestatsModel(stat["file statistics"])
-                proxyFstatsModel = FilestatsSortFilterProxyModel()
+                proxyFstatsModel = RegexSortFilterProxyModel()
                 proxyFstatsModel.setSourceModel(fstatsModel)
                 newFilestatModels[proc] = proxyFstatsModel
                 syscallsModel = SyscallsModel(stat["unmatched syscalls"])
-                proxyScModel = SyscallsSortFilterProxyModel()
+                proxyScModel = RegexSortFilterProxyModel()
                 proxyScModel.setSourceModel(syscallsModel)
                 newSyscallModels[proc] = proxyScModel
 
@@ -74,3 +72,20 @@ class Model (QObject):
 
     def getSyscallsModel(self, proc):
         return self.__syscallModels[proc]
+
+
+class RegexSortFilterProxyModel (QSortFilterProxyModel):
+
+    def __init__(self, parent=None):
+        QSortFilterProxyModel.__init__(self, parent)
+
+    def filterAcceptsColumn(self, column, parent):
+        return True
+
+    def filterAcceptsRow(self, row, parent):
+        regex = self.filterRegularExpression()
+        name = self.sourceModel().headerData(row, Qt.Vertical, Qt.DisplayRole)
+        if name and regex.isValid():
+            return regex.match(name).hasMatch()
+        else:
+            return False
