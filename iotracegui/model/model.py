@@ -5,7 +5,8 @@ from PySide2.QtCore import QObject, Signal
 from iotracegui.model.processes_model import ProcessesModel
 from iotracegui.model.filestats_model import FilestatsModel, \
         FilestatsSortFilterProxyModel
-from iotracegui.model.syscalls_model import SyscallsModel
+from iotracegui.model.syscalls_model import SyscallsModel, \
+        SyscallsSortFilterProxyModel
 
 
 class Model (QObject):
@@ -44,7 +45,9 @@ class Model (QObject):
                 proxyFstatsModel.setSourceModel(fstatsModel)
                 newFilestatModels[proc] = proxyFstatsModel
                 syscallsModel = SyscallsModel(stat["unmatched syscalls"])
-                newSyscallModels[proc] = syscallsModel
+                proxyScModel = SyscallsSortFilterProxyModel()
+                proxyScModel.setSourceModel(syscallsModel)
+                newSyscallModels[proc] = proxyScModel
 
         # destruct manually because signals are still connected
         if self.__filestatModels:

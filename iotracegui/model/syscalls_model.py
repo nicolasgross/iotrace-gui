@@ -1,4 +1,5 @@
-from PySide2.QtCore import Qt, QAbstractTableModel, QModelIndex
+from PySide2.QtCore import Qt, QAbstractTableModel, QModelIndex, \
+        QSortFilterProxyModel
 
 
 class SyscallsModel (QAbstractTableModel):
@@ -52,3 +53,9 @@ class SyscallsModel (QAbstractTableModel):
                 return None
         else:
             return None
+
+
+class SyscallsSortFilterProxyModel (QSortFilterProxyModel):
+
+    def __init__(self, parent=None):
+        QSortFilterProxyModel.__init__(self, parent)
