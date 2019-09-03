@@ -20,22 +20,32 @@
    <string>iotrace-GUI</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
     <property name="spacing">
-     <number>6</number>
+     <number>5</number>
     </property>
     <property name="leftMargin">
-     <number>0</number>
+     <number>5</number>
     </property>
     <property name="topMargin">
      <number>5</number>
     </property>
     <property name="rightMargin">
-     <number>0</number>
+     <number>5</number>
     </property>
     <property name="bottomMargin">
      <number>0</number>
     </property>
+    <item>
+     <widget class="QListView" name="processesListView">
+      <property name="maximumSize">
+       <size>
+        <width>250</width>
+        <height>16777215</height>
+       </size>
+      </property>
+     </widget>
+    </item>
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
@@ -61,16 +71,6 @@
         <property name="bottomMargin">
          <number>5</number>
         </property>
-        <item>
-         <widget class="QListView" name="processesListView">
-          <property name="maximumSize">
-           <size>
-            <width>250</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <property name="spacing">
@@ -132,18 +132,7 @@
          <number>5</number>
         </property>
         <item>
-         <widget class="QTableWidget" name="syscallsTable">
-          <column>
-           <property name="text">
-            <string>Count</string>
-           </property>
-          </column>
-          <column>
-           <property name="text">
-            <string>Total Time</string>
-           </property>
-          </column>
-         </widget>
+         <widget class="QTableView" name="syscallsTableView"/>
         </item>
        </layout>
       </widget>
