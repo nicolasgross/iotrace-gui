@@ -8,7 +8,7 @@ class SyscallsTab:
     def __init__(self, window, model):
         self.__window = window
         self.__model = model
-        self.__currentSelection = None
+        self.__currentProc = None
         self.__model.modelsWillChange.connect(self.disconnectSignalsSlot)
         self.__window.syscallsLineEdit.textChanged.connect(
                 self.__validateRegex)
@@ -19,7 +19,7 @@ class SyscallsTab:
 
     @Slot()
     def disconnectSignalsSlot(self):
-        self.__disconnectSignals(self.__currentSelection)
+        self.__disconnectSignals(self.__currentProc)
 
     def __disconnectSignals(self, previous):
         if previous:
@@ -36,7 +36,7 @@ class SyscallsTab:
 
         # connect new syscalls model
         procsModel = self.__model.getProcsModel()
-        self.__currentSelection = current
+        self.__currentProc = current
         selectedProc = procsModel.data(current, Qt.ItemDataRole)
         syscallsModel = self.__model.getSyscallsModel(selectedProc)
         self.__window.syscallsLineEdit.textChanged.connect(

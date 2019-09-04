@@ -128,7 +128,7 @@
          <widget class="QTableView" name="rwTableView">
           <property name="maximumSize">
            <size>
-            <width>300</width>
+            <width>404</width>
             <height>16777215</height>
            </size>
           </property>

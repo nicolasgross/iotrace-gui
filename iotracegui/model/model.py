@@ -5,7 +5,7 @@ from PySide2.QtCore import QObject, Signal, Qt, QSortFilterProxyModel, \
 
 from iotracegui.model.processes_model import ProcessesModel
 from iotracegui.model.filestats_model import FilestatsModel
-from iotracegui.model.rw_blocks_model import FilenamesModel
+from iotracegui.model.rw_blocks_model import FilenamesModel, RwBlocksModel
 from iotracegui.model.syscalls_model import SyscallsModel
 
 
@@ -19,6 +19,7 @@ class Model (QObject):
         self.__procsModel = None
         self.__filestatModels = None
         self.__filenameModels = None
+        self.__rwBlocksModels = None
         self.__syscallModels = None
         self.setFiles(files)
 
@@ -37,7 +38,8 @@ class Model (QObject):
         newStats = {}  # dict ((host, rank) -> stats)
         newProcs = []
         newFilestatModels = {}  # dict ((host, rank) -> filestatModel)
-        newFilenameModels = {}  # dict ((host, rank) -> filenames)
+        newFilenameModels = {}  # dict ((host, rank) -> files)
+        newRwBlocksModels = {}  # dict ((host, rank) -> files -> blocksModel)
         newSyscallModels = {}  # dict ((host, rank) -> syscallModel)
         if files:
             newStats = self.__parseFiles(files)
@@ -53,6 +55,12 @@ class Model (QObject):
                 proxyFnamesModel.setSourceModel(filenamesModel)
                 newFilenameModels[proc] = proxyFnamesModel
 
+                procsRwBlocksModels = {}
+                for filestat in stat['file statistics']:
+                    procsRwBlocksModels[filestat['filename']] = RwBlocksModel(
+                            filestat)
+                newRwBlocksModels[proc] = procsRwBlocksModels
+
                 syscallsModel = SyscallsModel(stat['unmatched syscalls'])
                 proxyScModel = RegexSortFilterProxyTableModel()
                 proxyScModel.setSourceModel(syscallsModel)
@@ -60,12 +68,13 @@ class Model (QObject):
 
         self.modelsWillChange.emit()
 
+        self.__files = files
+        self.__procStats = newStats
         self.__procsModel = ProcessesModel(newProcs)
         self.__filestatModels = newFilestatModels
         self.__filenameModels = newFilenameModels
+        self.__rwBlocksModels = newRwBlocksModels
         self.__syscallModels = newSyscallModels
-        self.__files = files
-        self.__procStats = newStats
         self.modelsChanged.emit()
 
     def getProcsModel(self):
@@ -76,6 +85,9 @@ class Model (QObject):
 
     def getFilenamesModel(self, proc):
         return self.__filenameModels[proc]
+
+    def getRwBlocksModel(self, proc, filename):
+        return self.__rwBlocksModels[proc][filename]
 
     def getSyscallsModel(self, proc):
         return self.__syscallModels[proc]

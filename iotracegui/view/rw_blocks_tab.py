@@ -8,7 +8,7 @@ class RwBlocksTab:
     def __init__(self, window, model):
         self.__window = window
         self.__model = model
-        self.__currentSelection = None
+        self.__currentProc = None
         self.__model.modelsWillChange.connect(self.disconnectSignalsSlot)
         self.__window.rwLineEdit.textChanged.connect(
                 self.__validateRegex)
@@ -19,7 +19,7 @@ class RwBlocksTab:
 
     @Slot()
     def disconnectSignalsSlot(self):
-        self.__disconnectSignals(self.__currentSelection)
+        self.__disconnectSignals(self.__currentProc)
 
     def __disconnectSignals(self, previous):
         if previous:
@@ -28,7 +28,9 @@ class RwBlocksTab:
             if prevProc:
                 filenamesModel = self.__model.getFilenamesModel(prevProc)
                 self.__window.rwLineEdit.textChanged.disconnect(
-                         filenamesModel.setFilterRegularExpression)
+                        filenamesModel.setFilterRegularExpression)
+                self.__window.rwListView.selectionModel().currentChanged. \
+                    disconnect(self.showSelectedFile)
 
     @Slot()
     def showSelectedProc(self, current, previous):
@@ -36,7 +38,7 @@ class RwBlocksTab:
 
         # connect new filenames model
         procsModel = self.__model.getProcsModel()
-        self.__currentSelection = current
+        self.__currentProc = current
         selectedProc = procsModel.data(current, Qt.ItemDataRole)
         filenamesModel = self.__model.getFilenamesModel(selectedProc)
         self.__window.rwLineEdit.textChanged.connect(
@@ -46,7 +48,18 @@ class RwBlocksTab:
 
         # show new filenames model
         self.__window.rwListView.setModel(filenamesModel)
+        self.__window.rwListView.selectionModel().currentChanged.connect(
+                self.showSelectedFile)
 
-    # @Slot()
-    # def showSelectedFile(self, current, previous):
-    #     selectedFile = self.__model.
+    @Slot()
+    def showSelectedFile(self, current, previous):
+        procsModel = self.__model.getProcsModel()
+        selectedProc = procsModel.data(self.__currentProc, Qt.ItemDataRole)
+        filenamesModel = self.__model.getFilenamesModel(selectedProc)
+        selectedFile = filenamesModel.data(current, Qt.ItemDataRole)
+        if selectedProc and selectedFile:
+            rwBlocksModel = self.__model.getRwBlocksModel(selectedProc,
+                                                          selectedFile)
+            self.__window.rwTableView.setModel(rwBlocksModel)
+        else:
+            self.__window.rwTableView.setModel(None)

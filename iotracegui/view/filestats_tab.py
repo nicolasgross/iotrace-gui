@@ -8,7 +8,7 @@ class FilestatsTab:
     def __init__(self, window, model):
         self.__window = window
         self.__model = model
-        self.__currentSelection = None
+        self.__currentProc = None
         self.__model.modelsWillChange.connect(self.disconnectSignalsSlot)
         self.__window.filestatsLineEdit.textChanged.connect(
                 self.__validateRegex)
@@ -19,7 +19,7 @@ class FilestatsTab:
 
     @Slot()
     def disconnectSignalsSlot(self):
-        self.__disconnectSignals(self.__currentSelection)
+        self.__disconnectSignals(self.__currentProc)
 
     def __disconnectSignals(self, previous):
         if previous:
@@ -36,7 +36,7 @@ class FilestatsTab:
 
         # connect new filestats model
         procsModel = self.__model.getProcsModel()
-        self.__currentSelection = current
+        self.__currentProc = current
         selectedProc = procsModel.data(current, Qt.ItemDataRole)
         filestatModel = self.__model.getFilestatsModel(selectedProc)
         self.__window.filestatsLineEdit.textChanged.connect(

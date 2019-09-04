@@ -18,7 +18,7 @@ class FilestatsModel (QAbstractTableModel):
             'R Bytes', 'R Total (ms)', 'R Avg (MB/s)', 'R Min (MB/s)',
             'R Max (MB/s)',
             'W Bytes', 'W Total (ms)', 'W Avg (MB/s)', 'W Min (MB/s)',
-            'W Max (MB/s)',
+            'W Max (MB/s)'
         ]
 
     columnTooltips = [
