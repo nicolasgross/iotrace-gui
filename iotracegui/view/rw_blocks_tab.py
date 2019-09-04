@@ -1,6 +1,6 @@
 from PySide2.QtCore import Qt, Slot
 
-from iotracegui.view.shared_tab_func import validateRegex
+from iotracegui.view.shared_func import validateRegex
 
 
 class RwBlocksTab:
@@ -9,7 +9,7 @@ class RwBlocksTab:
         self.__window = window
         self.__model = model
         self.__currentSelection = None
-        self.__model.modelsWillChange.connect(self.disconnectSignals)
+        self.__model.modelsWillChange.connect(self.disconnectSignalsSlot)
         self.__window.rwLineEdit.textChanged.connect(
                 self.__validateRegex)
 
@@ -18,27 +18,24 @@ class RwBlocksTab:
         validateRegex(pattern, self.__window.rwLineEdit)
 
     @Slot()
-    def disconnectSignals(self):
-        if self.__currentSelection:
+    def disconnectSignalsSlot(self):
+        self.__disconnectSignals(self.__currentSelection)
+
+    def __disconnectSignals(self, previous):
+        if previous:
             procsModel = self.__model.getProcsModel()
-            selectedProc = procsModel.data(self.__currentSelection,
-                                           Qt.ItemDataRole)
-            filenamesModel = self.__model.getFilenamesModel(selectedProc)
-            self.__window.rwLineEdit.textChanged.disconnect(
-                     filenamesModel.setFilterRegularExpression)
+            prevProc = procsModel.data(previous, Qt.ItemDataRole)
+            if prevProc:
+                filenamesModel = self.__model.getFilenamesModel(prevProc)
+                self.__window.rwLineEdit.textChanged.disconnect(
+                         filenamesModel.setFilterRegularExpression)
 
     @Slot()
     def showSelectedProc(self, current, previous):
-        procsModel = self.__model.getProcsModel()
-
-        # disconnect previous filenames model
-        prevProc = procsModel.data(previous, Qt.ItemDataRole)
-        if prevProc:
-            prevFilenamesModel = self.__model.getFilenamesModel(prevProc)
-            self.__window.rwLineEdit.textChanged.disconnect(
-                     prevFilenamesModel.setFilterRegularExpression)
+        self.__disconnectSignals(previous)
 
         # connect new filenames model
+        procsModel = self.__model.getProcsModel()
         self.__currentSelection = current
         selectedProc = procsModel.data(current, Qt.ItemDataRole)
         filenamesModel = self.__model.getFilenamesModel(selectedProc)

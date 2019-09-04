@@ -1,6 +1,6 @@
 from PySide2.QtCore import Qt, Slot
 
-from iotracegui.view.shared_tab_func import validateRegex
+from iotracegui.view.shared_func import validateRegex
 
 
 class FilestatsTab:
@@ -9,7 +9,7 @@ class FilestatsTab:
         self.__window = window
         self.__model = model
         self.__currentSelection = None
-        self.__model.modelsWillChange.connect(self.disconnectSignals)
+        self.__model.modelsWillChange.connect(self.disconnectSignalsSlot)
         self.__window.filestatsLineEdit.textChanged.connect(
                 self.__validateRegex)
 
@@ -18,27 +18,24 @@ class FilestatsTab:
         validateRegex(pattern, self.__window.filestatsLineEdit)
 
     @Slot()
-    def disconnectSignals(self):
-        if self.__currentSelection:
+    def disconnectSignalsSlot(self):
+        self.__disconnectSignals(self.__currentSelection)
+
+    def __disconnectSignals(self, previous):
+        if previous:
             procsModel = self.__model.getProcsModel()
-            selectedProc = procsModel.data(self.__currentSelection,
-                                           Qt.ItemDataRole)
-            filestatModel = self.__model.getFilestatsModel(selectedProc)
-            self.__window.filestatsLineEdit.textChanged.disconnect(
-                     filestatModel.setFilterRegularExpression)
+            prevProc = procsModel.data(previous, Qt.ItemDataRole)
+            if prevProc:
+                filestatModel = self.__model.getFilestatsModel(prevProc)
+                self.__window.filestatsLineEdit.textChanged.disconnect(
+                         filestatModel.setFilterRegularExpression)
 
     @Slot()
     def showSelectedProc(self, current, previous):
-        procsModel = self.__model.getProcsModel()
-
-        # disconnect previous filestats model
-        prevProc = procsModel.data(previous, Qt.ItemDataRole)
-        if prevProc:
-            prevFilestatModel = self.__model.getFilestatsModel(prevProc)
-            self.__window.filestatsLineEdit.textChanged.disconnect(
-                     prevFilestatModel.setFilterRegularExpression)
+        self.__disconnectSignals(previous)
 
         # connect new filestats model
+        procsModel = self.__model.getProcsModel()
         self.__currentSelection = current
         selectedProc = procsModel.data(current, Qt.ItemDataRole)
         filestatModel = self.__model.getFilestatsModel(selectedProc)
