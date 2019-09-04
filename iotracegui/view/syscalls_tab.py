@@ -25,7 +25,7 @@ class SyscallsTab:
                     "background-color: white;")
         else:
             self.__window.syscallsLineEdit.setStyleSheet(
-                    "background-color: orange;")
+                    "background-color: red;")
 
     @Slot()
     def showSelectedProc(self, current, previous):

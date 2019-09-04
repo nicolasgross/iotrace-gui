@@ -25,7 +25,7 @@ class RwBlocksTab:
                     "background-color: white;")
         else:
             self.__window.rwLineEdit.setStyleSheet(
-                    "background-color: orange;")
+                    "background-color: red;")
 
     @Slot()
     def showSelectedProc(self, current, previous):
