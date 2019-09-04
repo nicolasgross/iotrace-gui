@@ -11,7 +11,8 @@ from iotracegui.model.syscalls_model import SyscallsModel
 
 class Model (QObject):
 
-    filesLoaded = Signal()
+    modelsWillChange = Signal()
+    modelsChanged = Signal()
 
     def __init__(self, files):
         QObject.__init__(self)
@@ -57,29 +58,18 @@ class Model (QObject):
                 proxyScModel.setSourceModel(syscallsModel)
                 newSyscallModels[proc] = proxyScModel
 
-        # destruct manually because signals are still connected
-        if self.__filestatModels:
-            for proc, fstatModel in self.__filestatModels.items():
-                del fstatModel
-        if self.__filenameModels:
-            for proc, fnamesModel in self.__filenameModels.items():
-                del fnamesModel
-        if self.__syscallModels:
-            for proc, syscallsModel in self.__syscallModels.items():
-                del syscallsModel
-        if self.__procsModel:
-            del self.__procsModel
+        self.modelsWillChange.emit()
 
-        self.procsModel = ProcessesModel(newProcs)
+        self.__procsModel = ProcessesModel(newProcs)
         self.__filestatModels = newFilestatModels
         self.__filenameModels = newFilenameModels
         self.__syscallModels = newSyscallModels
         self.__files = files
         self.__procStats = newStats
-        self.filesLoaded.emit()
+        self.modelsChanged.emit()
 
-    def getProcs(self):
-        return self.procsModel.getProcs()
+    def getProcsModel(self):
+        return self.__procsModel
 
     def getFilestatsModel(self, proc):
         return self.__filestatModels[proc]

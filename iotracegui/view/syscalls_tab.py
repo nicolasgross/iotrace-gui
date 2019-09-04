@@ -1,4 +1,6 @@
-from PySide2.QtCore import Qt, Slot, QRegularExpression
+from PySide2.QtCore import Qt, Slot
+
+from iotracegui.view.shared_tab_func import validateRegex
 
 
 class SyscallsTab:
@@ -6,29 +8,44 @@ class SyscallsTab:
     def __init__(self, window, model):
         self.__window = window
         self.__model = model
-        self.__model.filesLoaded.connect(self.__refresh)
+        self.__currentSelection = None
+        self.__model.modelsWillChange.connect(self.disconnectSignals)
         self.__window.syscallsLineEdit.textChanged.connect(
                 self.__validateRegex)
 
     @Slot()
-    def __refresh(self):
-        for proc in self.__model.getProcs():
-            syscallsModel = self.__model.getSyscallsModel(proc)
-            self.__window.syscallsLineEdit.textChanged.connect(
-                    syscallsModel.setFilterRegularExpression)
+    def __validateRegex(self, pattern):
+        validateRegex(pattern, self.__window.syscallsLineEdit)
 
     @Slot()
-    def __validateRegex(self, pattern):
-        regex = QRegularExpression(pattern)
-        if regex.isValid():
-            self.__window.syscallsLineEdit.setStyleSheet(
-                    "background-color: white;")
-        else:
-            self.__window.syscallsLineEdit.setStyleSheet(
-                    "background-color: red;")
+    def disconnectSignals(self):
+        if self.__currentSelection:
+            procsModel = self.__model.getProcsModel()
+            selectedProc = procsModel.data(self.__currentSelection,
+                                           Qt.ItemDataRole)
+            syscallsModel = self.__model.getSyscallsModel(selectedProc)
+            self.__window.syscallsLineEdit.textChanged.disconnect(
+                     syscallsModel.setFilterRegularExpression)
 
     @Slot()
     def showSelectedProc(self, current, previous):
-        selectedProc = self.__model.procsModel.data(current, Qt.ItemDataRole)
+        procsModel = self.__model.getProcsModel()
+
+        # disconnect previous syscalls model
+        prevProc = procsModel.data(previous, Qt.ItemDataRole)
+        if prevProc:
+            prevSyscallsModel = self.__model.getSyscallsModel(prevProc)
+            self.__window.syscallsLineEdit.textChanged.disconnect(
+                     prevSyscallsModel.setFilterRegularExpression)
+
+        # connect new syscalls model
+        self.__currentSelection = current
+        selectedProc = procsModel.data(current, Qt.ItemDataRole)
         syscallsModel = self.__model.getSyscallsModel(selectedProc)
+        self.__window.syscallsLineEdit.textChanged.connect(
+                 syscallsModel.setFilterRegularExpression)
+        regex = self.__window.syscallsLineEdit.text()
+        self.__window.syscallsLineEdit.textChanged.emit(regex)
+
+        # show new syscalls model
         self.__window.syscallsTableView.setModel(syscallsModel)

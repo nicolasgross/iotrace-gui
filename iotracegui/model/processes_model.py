@@ -30,5 +30,8 @@ class ProcessesModel (QAbstractListModel):
         else:
             return f"Row {section}"
 
+    def setProcs(self, procs):
+        self.__procs = procs
+
     def getProcs(self):
         return self.__procs

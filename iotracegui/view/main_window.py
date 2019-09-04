@@ -18,8 +18,8 @@ class MainWindow:
         self.__window = QUiLoader().load(uiFile)
         uiFile.close()
         self.__initMenu()
-        self.__initProcListView()
         self.__initTabs()
+        self.__initProcListView()
 
     def __initMenu(self):
         self.__window.actionQuit.triggered.connect(self.__app.exit)
@@ -29,7 +29,14 @@ class MainWindow:
         # TODO help about
 
     def __initProcListView(self):
-        self.__model.filesLoaded.connect(self.__refreshProcListView)
+        self.__model.modelsChanged.connect(self.__refreshProcListView)
+        self.__window.processesListView.setModel(self.__model.getProcsModel())
+        self.__window.processesListView.selectionModel(). \
+            currentChanged.connect(self.__filestatsTab.showSelectedProc)
+        self.__window.processesListView.selectionModel(). \
+            currentChanged.connect(self.__rwBlocksTab.showSelectedProc)
+        self.__window.processesListView.selectionModel(). \
+            currentChanged.connect(self.__syscallsTab.showSelectedProc)
 
     def __initTabs(self):
         self.__filestatsTab = FilestatsTab(self.__window, self.__model)
@@ -54,13 +61,22 @@ class MainWindow:
 
     @Slot()
     def __refreshProcListView(self):
-        self.__window.processesListView.setModel(self.__model.procsModel)
+        self.__window.processesListView.selectionModel(). \
+            currentChanged.disconnect(self.__filestatsTab.showSelectedProc)
+        self.__window.processesListView.selectionModel(). \
+            currentChanged.disconnect(self.__rwBlocksTab.showSelectedProc)
+        self.__window.processesListView.selectionModel(). \
+            currentChanged.disconnect(self.__syscallsTab.showSelectedProc)
+
+        self.__window.processesListView.setModel(self.__model.getProcsModel())
+
         self.__window.processesListView.selectionModel(). \
             currentChanged.connect(self.__filestatsTab.showSelectedProc)
         self.__window.processesListView.selectionModel(). \
             currentChanged.connect(self.__rwBlocksTab.showSelectedProc)
         self.__window.processesListView.selectionModel(). \
             currentChanged.connect(self.__syscallsTab.showSelectedProc)
+        self.__window.processesListView.setFocus()
 
     def show(self):
         self.__window.show()
