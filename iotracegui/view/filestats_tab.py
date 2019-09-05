@@ -1,6 +1,6 @@
 from PySide2.QtCore import Qt, Slot
 
-from iotracegui.view.shared_func import validateRegex
+from iotracegui.view.shared_func import validateRegex, CopySelectedCellsAction
 
 
 class FilestatsTab:
@@ -12,6 +12,8 @@ class FilestatsTab:
         self.__model.modelsWillChange.connect(self.disconnectSignalsSlot)
         self.__window.filestatsLineEdit.textChanged.connect(
                 self.__validateRegex)
+        self.__window.filestatsTableView.addAction(
+                CopySelectedCellsAction(self.__window.filestatsTableView))
 
     @Slot()
     def __validateRegex(self, pattern):
