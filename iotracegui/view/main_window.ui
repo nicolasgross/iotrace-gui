@@ -178,55 +178,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="rwBlocks">
-       <attribute name="title">
-        <string>Read/Write Blocks</string>
-       </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
-        <property name="spacing">
-         <number>5</number>
-        </property>
-        <property name="leftMargin">
-         <number>5</number>
-        </property>
-        <property name="topMargin">
-         <number>5</number>
-        </property>
-        <property name="rightMargin">
-         <number>5</number>
-        </property>
-        <property name="bottomMargin">
-         <number>5</number>
-        </property>
-        <item>
-         <layout class="QVBoxLayout" name="rwVerticalLayout">
-          <property name="spacing">
-           <number>5</number>
-          </property>
-          <item>
-           <widget class="QLineEdit" name="rwLineEdit">
-            <property name="placeholderText">
-             <string>Filename filter (Perl regex)</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QListView" name="rwListView"/>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QTableView" name="rwTableView">
-          <property name="maximumSize">
-           <size>
-            <width>404</width>
-            <height>16777215</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="syscalls">
        <attribute name="title">
         <string>Unconsidered Syscalls</string>

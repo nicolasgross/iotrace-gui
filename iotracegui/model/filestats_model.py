@@ -59,9 +59,9 @@ class FilestatsModel (QAbstractTableModel):
 
     def data(self, index, role):
         if (not index.isValid() or index.column() >= self.columnCount() or
-                index.row() >= self.rowCount() or role != Qt.DisplayRole):
+                index.row() >= self.rowCount()):
             return None
-        else:
+        elif role == Qt.DisplayRole:
             fStat = self.__filestats[index.row()]
             subStat = fStat[FilestatsModel.columnMapping[index.column()]]
             relativeColumn = index.column() % 5
@@ -83,6 +83,8 @@ class FilestatsModel (QAbstractTableModel):
                                 (subStat[1] / 1000000000.0)
             elif relativeColumn > 2:
                 return subStat[relativeColumn - 1] / 1000000.0
+        else:
+            return None
 
     def headerData(self, section, orientation, role):
         if role == Qt.DisplayRole:
@@ -90,7 +92,7 @@ class FilestatsModel (QAbstractTableModel):
                 return self.columnNames[section]
             else:
                 fname = self.__filestats[section]["filename"]
-                if len(fname) > 40:
+                if len(fname) > 43:
                     return fname[:20] + ' ... ' + fname[-20:]
                 else:
                     return fname

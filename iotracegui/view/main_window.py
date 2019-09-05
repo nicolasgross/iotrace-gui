@@ -4,7 +4,6 @@ from PySide2.QtWidgets import QFileDialog, QErrorMessage
 from PySide2.QtCore import QFile, Slot
 
 from iotracegui.view.filestats_tab import FilestatsTab
-from iotracegui.view.rw_blocks_tab import RwBlocksTab
 from iotracegui.view.syscalls_tab import SyscallsTab
 
 
@@ -34,13 +33,10 @@ class MainWindow:
         self.__window.processesListView.selectionModel(). \
             currentChanged.connect(self.__filestatsTab.showSelectedProc)
         self.__window.processesListView.selectionModel(). \
-            currentChanged.connect(self.__rwBlocksTab.showSelectedProc)
-        self.__window.processesListView.selectionModel(). \
             currentChanged.connect(self.__syscallsTab.showSelectedProc)
 
     def __initTabs(self):
         self.__filestatsTab = FilestatsTab(self.__window, self.__model)
-        self.__rwBlocksTab = RwBlocksTab(self.__window, self.__model)
         self.__syscallsTab = SyscallsTab(self.__window, self.__model)
 
     def __menuFileOpen(self):
@@ -64,16 +60,12 @@ class MainWindow:
         self.__window.processesListView.selectionModel(). \
             currentChanged.disconnect(self.__filestatsTab.showSelectedProc)
         self.__window.processesListView.selectionModel(). \
-            currentChanged.disconnect(self.__rwBlocksTab.showSelectedProc)
-        self.__window.processesListView.selectionModel(). \
             currentChanged.disconnect(self.__syscallsTab.showSelectedProc)
 
         self.__window.processesListView.setModel(self.__model.getProcsModel())
 
         self.__window.processesListView.selectionModel(). \
             currentChanged.connect(self.__filestatsTab.showSelectedProc)
-        self.__window.processesListView.selectionModel(). \
-            currentChanged.connect(self.__rwBlocksTab.showSelectedProc)
         self.__window.processesListView.selectionModel(). \
             currentChanged.connect(self.__syscallsTab.showSelectedProc)
         self.__window.processesListView.setFocus()

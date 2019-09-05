@@ -1,6 +1,7 @@
-from PySide2.QtCore import Qt, Signal, Slot, QObject
+from PySide2.QtCore import Qt, Signal, Slot, QObject, QModelIndex
 
 from iotracegui.view.shared_func import validateRegex, CopySelectedCellsAction
+from iotracegui.view.blocks_popup import BlocksPopup
 
 
 class FilestatsTab (QObject):
@@ -17,23 +18,36 @@ class FilestatsTab (QObject):
                 self.__validateRegex)
         self.__window.filestatsTableView.addAction(
                 CopySelectedCellsAction(self.__window.filestatsTableView))
+        self.__window.filestatsTableView.doubleClicked.connect(
+                self.__openBlocksPopup)
         self.__initFilterCheckBoxes()
 
     def __initFilterCheckBoxes(self):
-        self.__window.checkBoxBin.stateChanged.connect(self.emitCheckBoxState)
-        self.__window.checkBoxDev.stateChanged.connect(self.emitCheckBoxState)
-        self.__window.checkBoxEtc.stateChanged.connect(self.emitCheckBoxState)
-        self.__window.checkBoxHome.stateChanged.connect(self.emitCheckBoxState)
-        self.__window.checkBoxOpt.stateChanged.connect(self.emitCheckBoxState)
-        self.__window.checkBoxProc.stateChanged.connect(self.emitCheckBoxState)
-        self.__window.checkBoxRun.stateChanged.connect(self.emitCheckBoxState)
-        self.__window.checkBoxSys.stateChanged.connect(self.emitCheckBoxState)
-        self.__window.checkBoxTmp.stateChanged.connect(self.emitCheckBoxState)
-        self.__window.checkBoxUsr.stateChanged.connect(self.emitCheckBoxState)
-        self.__window.checkBoxVar.stateChanged.connect(self.emitCheckBoxState)
+        self.__window.checkBoxBin.stateChanged.connect(
+                self.__emitCheckBoxState)
+        self.__window.checkBoxDev.stateChanged.connect(
+                self.__emitCheckBoxState)
+        self.__window.checkBoxEtc.stateChanged.connect(
+                self.__emitCheckBoxState)
+        self.__window.checkBoxHome.stateChanged.connect(
+                self.__emitCheckBoxState)
+        self.__window.checkBoxOpt.stateChanged.connect(
+                self.__emitCheckBoxState)
+        self.__window.checkBoxProc.stateChanged.connect(
+                self.__emitCheckBoxState)
+        self.__window.checkBoxRun.stateChanged.connect(
+                self.__emitCheckBoxState)
+        self.__window.checkBoxSys.stateChanged.connect(
+                self.__emitCheckBoxState)
+        self.__window.checkBoxTmp.stateChanged.connect(
+                self.__emitCheckBoxState)
+        self.__window.checkBoxUsr.stateChanged.connect(
+                self.__emitCheckBoxState)
+        self.__window.checkBoxVar.stateChanged.connect(
+                self.__emitCheckBoxState)
 
-    @Slot()
-    def emitCheckBoxState(self, newVal):
+    @Slot(int)
+    def __emitCheckBoxState(self, newVal):
         state = {}
         state['bin'] = self.__window.checkBoxBin.isChecked()
         state['dev'] = self.__window.checkBoxDev.isChecked()
@@ -47,6 +61,20 @@ class FilestatsTab (QObject):
         state['usr'] = self.__window.checkBoxUsr.isChecked()
         state['var'] = self.__window.checkBoxVar.isChecked()
         self.checkboxesChanged.emit(state)
+
+    @Slot(QModelIndex)
+    def __openBlocksPopup(self, index):
+        if self.__currentProc:
+            procsModel = self.__model.getProcsModel()
+            selectedProc = procsModel.data(self.__currentProc, Qt.ItemDataRole)
+            filestatModel = self.__model.getFilestatsModel(selectedProc)
+            filename = filestatModel.headerData(index.row(), Qt.Vertical,
+                                                Qt.ToolTipRole)
+            if filename:
+                rwBlocksModel = self.__model.getRwBlocksModel(selectedProc,
+                                                              filename)
+                popup = BlocksPopup(rwBlocksModel, filename)
+                popup.show(self.__window)
 
     @Slot()
     def __validateRegex(self, pattern):
