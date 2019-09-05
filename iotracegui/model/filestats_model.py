@@ -89,12 +89,15 @@ class FilestatsModel (QAbstractTableModel):
             if orientation == Qt.Horizontal:
                 return self.columnNames[section]
             else:
-                # TODO fix long filenames
-                return self.__filestats[section]["filename"]
+                fname = self.__filestats[section]["filename"]
+                if len(fname) > 40:
+                    return fname[:20] + ' ... ' + fname[-20:]
+                else:
+                    return fname
         elif role == Qt.ToolTipRole:
             if orientation == Qt.Horizontal:
                 return self.columnTooltips[section]
             else:
-                return None
+                return self.__filestats[section]["filename"]
         else:
             return None
