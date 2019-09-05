@@ -1,7 +1,7 @@
 import os
 import json
 from PySide2.QtCore import QObject, Signal, Qt, QSortFilterProxyModel, \
-        QModelIndex
+        QModelIndex, Slot
 
 from iotracegui.model.processes_model import ProcessesModel
 from iotracegui.model.filestats_model import FilestatsModel
@@ -46,7 +46,7 @@ class Model (QObject):
             newProcs = [*newStats]
             for proc, stat in newStats.items():
                 fstatsModel = FilestatsModel(stat['file statistics'])
-                proxyFstatsModel = RegexSortFilterProxyTableModel()
+                proxyFstatsModel = CheckboxRegexSortFilterProxyTableModel()
                 proxyFstatsModel.setSourceModel(fstatsModel)
                 newFilestatModels[proc] = proxyFstatsModel
 
@@ -91,6 +91,36 @@ class Model (QObject):
 
     def getSyscallsModel(self, proc):
         return self.__syscallModels[proc]
+
+
+class CheckboxRegexSortFilterProxyTableModel (QSortFilterProxyModel):
+
+    def __init__(self, parent=None):
+        QSortFilterProxyModel.__init__(self, parent)
+        self.__checkboxState = {}
+
+    def filterAcceptsColumn(self, column, parent):
+        return True
+
+    def __fileCheckboxFiltered(self, fname):
+        for prefix, flag in self.__checkboxState.items():
+            if flag and (fname.startswith(prefix) or
+                         fname.startswith('/' + prefix)):
+                return True
+        return False
+
+    def filterAcceptsRow(self, row, parent):
+        regex = self.filterRegularExpression()
+        name = self.sourceModel().headerData(row, Qt.Vertical, Qt.ToolTipRole)
+        if name and regex.isValid() and not self.__fileCheckboxFiltered(name):
+            return regex.match(name).hasMatch()
+        else:
+            return False
+
+    @Slot(dict)
+    def setFilterCheckboxes(self, checkboxState):
+        self.__checkboxState = checkboxState
+        self.invalidate()
 
 
 class RegexSortFilterProxyTableModel (QSortFilterProxyModel):

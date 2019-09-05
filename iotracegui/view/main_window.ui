@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>988</width>
+    <width>1000</width>
     <height>532</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
+    <width>1000</width>
     <height>300</height>
    </size>
   </property>
@@ -71,6 +71,97 @@
         <property name="bottomMargin">
          <number>5</number>
         </property>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Filter:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <property name="spacing">
+           <number>10</number>
+          </property>
+          <item>
+           <widget class="QCheckBox" name="checkBoxBin">
+            <property name="text">
+             <string>/bin</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxDev">
+            <property name="text">
+             <string>/dev</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxEtc">
+            <property name="text">
+             <string>/etc</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxHome">
+            <property name="text">
+             <string>/home</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxOpt">
+            <property name="text">
+             <string>/opt</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxProc">
+            <property name="text">
+             <string>/proc</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxRun">
+            <property name="text">
+             <string>/run</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxSys">
+            <property name="text">
+             <string>/sys</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxTmp">
+            <property name="text">
+             <string>/tmp</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxUsr">
+            <property name="text">
+             <string>/usr</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="checkBoxVar">
+            <property name="text">
+             <string>/var</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
         <item>
          <widget class="QLineEdit" name="filestatsLineEdit">
           <property name="placeholderText">
@@ -181,7 +272,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>988</width>
+     <width>1000</width>
      <height>26</height>
     </rect>
    </property>

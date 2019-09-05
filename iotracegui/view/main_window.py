@@ -22,7 +22,7 @@ class MainWindow:
         self.__initProcListView()
 
     def __initMenu(self):
-        self.__window.actionQuit.triggered.connect(self.__app.exit)
+        self.__window.actionQuit.triggered.connect(self.__app.exit) # TODO confirmation
         self.__window.actionOpen.triggered.connect(self.__menuFileOpen)
         # TODO open recent
         # TODO view adjust columns
