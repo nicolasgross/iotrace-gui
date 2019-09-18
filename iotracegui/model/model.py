@@ -1,4 +1,3 @@
-import os
 import json
 from PySide2.QtCore import QObject, Signal, Qt, QSortFilterProxyModel, Slot
 
@@ -24,12 +23,10 @@ class Model (QObject):
     def _parseFiles(self, files):
         newProcStats = {}
         for filename in files:
-            run, host, rank = os.path.splitext(
-                    os.path.basename(filename))[0].split('_')
-            fileStats = None
             with open(filename) as f:
                 fileStats = json.load(f)
-            newProcStats[(run, host, rank)] = fileStats
+                newProcStats[(fileStats['trace-id'], fileStats['hostname'],
+                              fileStats['rank'])] = fileStats
         return newProcStats
 
     def setFiles(self, files):
