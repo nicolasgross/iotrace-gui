@@ -60,7 +60,7 @@ class MainWindow (QMainWindow, Ui_MainWindow):
             except Exception as e:
                 errorDialog = QErrorMessage(self)
                 errorDialog.showMessage(
-                        "Unexpected error occurred" + os.linesep + e.message)
+                        "Unexpected error occurred" + os.linesep + str(e))
 
     @Slot()
     def _refreshProcListView(self):

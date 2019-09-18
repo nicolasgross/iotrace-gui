@@ -72,7 +72,7 @@ class FilestatsTab (QObject):
                                                 Qt.ToolTipRole)
             if filename:
                 rwBlocksModel = self._model.getRwBlocksModel(selectedProc,
-                                                              filename)
+                                                             filename)
                 popup = BlocksPopup(rwBlocksModel, filename)
                 popup.show(self._window)
 
