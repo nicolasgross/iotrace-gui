@@ -1,4 +1,5 @@
-from PySide2.QtCore import Qt, Signal, Slot, QObject, QModelIndex
+from PySide2.QtCore import Qt, Signal, Slot, QObject, QModelIndex, \
+    QItemSelection
 
 from iotracegui.view.shared_func import validateRegex, CopySelectedCellsAction
 from iotracegui.view.blocks_popup import BlocksPopup
@@ -12,8 +13,7 @@ class FilestatsTab (QObject):
         QObject.__init__(self, parent)
         self._window = window
         self._model = model
-        self._currentProc = None
-        self._model.modelsWillChange.connect(self.disconnectSignalsSlot)
+        self._model.modelsWillChange.connect(self.disconnectSignals)
         self._window.filestatsLineEdit.textChanged.connect(
                 self._validateRegex)
         self._window.filestatsTableView.addAction(
@@ -76,33 +76,31 @@ class FilestatsTab (QObject):
                 popup = BlocksPopup(rwBlocksModel, filename)
                 popup.show(self._window)
 
-    @Slot()
+    @Slot(str)
     def _validateRegex(self, pattern):
         validateRegex(pattern, self._window.filestatsLineEdit)
 
     @Slot()
-    def disconnectSignalsSlot(self):
-        self._disconnectSignals(self._currentProc)
+    def disconnectSignals(self):
+        filestatModel = self._window.filestatsTableView.model()
+        if filestatModel:
+            self.checkboxesChanged.disconnect(
+                    filestatModel.setFilterCheckboxes)
+            self._window.filestatsLineEdit.textChanged.disconnect(
+                    filestatModel.setFilterRegularExpression)
 
-    def _disconnectSignals(self, previous):
-        if previous:
-            procsModel = self._model.getProcsModel()
-            prevProc = procsModel.data(previous, Qt.ItemDataRole)
-            if prevProc:
-                filestatModel = self._model.getFilestatsModel(prevProc)
-                self.checkboxesChanged.disconnect(
-                        filestatModel.setFilterCheckboxes)
-                self._window.filestatsLineEdit.textChanged.disconnect(
-                        filestatModel.setFilterRegularExpression)
+    @Slot(QItemSelection, QItemSelection)
+    def showSelectedProc(self, selected, deselected):
+        self.disconnectSignals()
 
-    @Slot()
-    def showSelectedProc(self, current, previous):
-        self._disconnectSignals(previous)
+        selectedProcs = self._window.processesListView.selectedIndexes()
+        if len(selectedProcs) != 1:
+            self._window.filestatsTableView.setModel(None)
+            return
 
         # connect new filestats model
         procsModel = self._model.getProcsModel()
-        self._currentProc = current
-        selectedProc = procsModel.data(current, Qt.ItemDataRole)
+        selectedProc = procsModel.data(selectedProcs[0], Qt.ItemDataRole)
         filestatModel = self._model.getFilestatsModel(selectedProc)
         self.checkboxesChanged.connect(filestatModel.setFilterCheckboxes)
         self._window.filestatsLineEdit.textChanged.connect(

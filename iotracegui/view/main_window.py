@@ -1,6 +1,5 @@
 import os
-from PySide2.QtWidgets import QFileDialog, QErrorMessage, QMainWindow, \
-        QMessageBox
+from PySide2.QtWidgets import QFileDialog, QMainWindow, QMessageBox
 from PySide2.QtCore import Slot
 
 from iotracegui.view.ui_main_window import Ui_MainWindow
@@ -26,10 +25,10 @@ class MainWindow (QMainWindow, Ui_MainWindow):
     def _initProcListView(self):
         self._model.modelsChanged.connect(self._refreshProcListView)
         self.processesListView.setModel(self._model.getProcsModel())
-        self.processesListView.selectionModel(). \
-            currentChanged.connect(self._filestatsTab.showSelectedProc)
-        self.processesListView.selectionModel(). \
-            currentChanged.connect(self._syscallsTab.showSelectedProc)
+        self.processesListView.selectionModel().selectionChanged. \
+            connect(self._filestatsTab.showSelectedProc)
+        self.processesListView.selectionModel().selectionChanged. \
+            connect(self._syscallsTab.showSelectedProc)
 
     def _initTabs(self):
         self._filestatsTab = FilestatsTab(self, self._model)
@@ -62,15 +61,15 @@ class MainWindow (QMainWindow, Ui_MainWindow):
 
     @Slot()
     def _refreshProcListView(self):
-        self.processesListView.selectionModel().currentChanged.disconnect(
+        self.processesListView.selectionModel().selectionChanged.disconnect(
                 self._filestatsTab.showSelectedProc)
-        self.processesListView.selectionModel().currentChanged.disconnect(
+        self.processesListView.selectionModel().selectionChanged.disconnect(
                 self._syscallsTab.showSelectedProc)
 
         self.processesListView.setModel(self._model.getProcsModel())
 
-        self.processesListView.selectionModel().currentChanged.connect(
+        self.processesListView.selectionModel().selectionChanged.connect(
                 self._filestatsTab.showSelectedProc)
-        self.processesListView.selectionModel().currentChanged.connect(
+        self.processesListView.selectionModel().selectionChanged.connect(
                 self._syscallsTab.showSelectedProc)
         self.processesListView.setFocus()
