@@ -15,10 +15,10 @@ class SyscallsModel (QAbstractTableModel):
 
     def __init__(self, syscalls, parent=None):
         QAbstractTableModel.__init__(self, parent)
-        self.__syscalls = syscalls
+        self._syscalls = syscalls
 
     def rowCount(self, parent=QModelIndex()):
-        return len(self.__syscalls)
+        return len(self._syscalls)
 
     def columnCount(self, parent=QModelIndex()):
         return 3
@@ -28,7 +28,7 @@ class SyscallsModel (QAbstractTableModel):
                 index.row() >= self.rowCount() or role != Qt.DisplayRole):
             return None
         else:
-            scStat = self.__syscalls[index.row()]
+            scStat = self._syscalls[index.row()]
             if index.column() == 0:
                 return scStat['count']
             elif index.column() == 1:
@@ -44,7 +44,7 @@ class SyscallsModel (QAbstractTableModel):
             if orientation == Qt.Horizontal:
                 return self.columnNames[section]
             else:
-                return self.__syscalls[section]["syscall"]
+                return self._syscalls[section]["syscall"]
         elif role == Qt.ToolTipRole:
             if orientation == Qt.Horizontal:
                 return self.columnTooltips[section]

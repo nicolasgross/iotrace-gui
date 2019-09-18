@@ -21,11 +21,11 @@ class CopySelectedCellsAction (QAction):
         super(CopySelectedCellsAction, self).__init__("Copy", tableView)
         self.setShortcuts(QKeySequence.keyBindings(QKeySequence.Copy))
         self.triggered.connect(self.copyCellsToClipboard)
-        self.__tableView = tableView
+        self._tableView = tableView
 
     def copyCellsToClipboard(self):
-        selection = self.__tableView.selectionModel().selectedIndexes()
+        selection = self._tableView.selectionModel().selectedIndexes()
         if len(selection) != 1:
             return
-        content = self.__tableView.model().data(selection[0], Qt.DisplayRole)
+        content = self._tableView.model().data(selection[0], Qt.DisplayRole)
         QApplication.clipboard().setText(str(content))

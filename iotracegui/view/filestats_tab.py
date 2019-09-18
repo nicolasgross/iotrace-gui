@@ -10,105 +10,105 @@ class FilestatsTab (QObject):
 
     def __init__(self, window, model, parent=None):
         QObject.__init__(self, parent)
-        self.__window = window
-        self.__model = model
-        self.__currentProc = None
-        self.__model.modelsWillChange.connect(self.disconnectSignalsSlot)
-        self.__window.filestatsLineEdit.textChanged.connect(
-                self.__validateRegex)
-        self.__window.filestatsTableView.addAction(
-                CopySelectedCellsAction(self.__window.filestatsTableView))
-        self.__window.filestatsTableView.doubleClicked.connect(
-                self.__openBlocksPopup)
-        self.__initFilterCheckBoxes()
+        self._window = window
+        self._model = model
+        self._currentProc = None
+        self._model.modelsWillChange.connect(self.disconnectSignalsSlot)
+        self._window.filestatsLineEdit.textChanged.connect(
+                self._validateRegex)
+        self._window.filestatsTableView.addAction(
+                CopySelectedCellsAction(self._window.filestatsTableView))
+        self._window.filestatsTableView.doubleClicked.connect(
+                self._openBlocksPopup)
+        self._initFilterCheckBoxes()
 
-    def __initFilterCheckBoxes(self):
-        self.__window.checkBoxBin.stateChanged.connect(
-                self.__emitCheckBoxState)
-        self.__window.checkBoxDev.stateChanged.connect(
-                self.__emitCheckBoxState)
-        self.__window.checkBoxEtc.stateChanged.connect(
-                self.__emitCheckBoxState)
-        self.__window.checkBoxHome.stateChanged.connect(
-                self.__emitCheckBoxState)
-        self.__window.checkBoxOpt.stateChanged.connect(
-                self.__emitCheckBoxState)
-        self.__window.checkBoxProc.stateChanged.connect(
-                self.__emitCheckBoxState)
-        self.__window.checkBoxRun.stateChanged.connect(
-                self.__emitCheckBoxState)
-        self.__window.checkBoxSys.stateChanged.connect(
-                self.__emitCheckBoxState)
-        self.__window.checkBoxTmp.stateChanged.connect(
-                self.__emitCheckBoxState)
-        self.__window.checkBoxUsr.stateChanged.connect(
-                self.__emitCheckBoxState)
-        self.__window.checkBoxVar.stateChanged.connect(
-                self.__emitCheckBoxState)
+    def _initFilterCheckBoxes(self):
+        self._window.checkBoxBin.stateChanged.connect(
+                self._emitCheckBoxState)
+        self._window.checkBoxDev.stateChanged.connect(
+                self._emitCheckBoxState)
+        self._window.checkBoxEtc.stateChanged.connect(
+                self._emitCheckBoxState)
+        self._window.checkBoxHome.stateChanged.connect(
+                self._emitCheckBoxState)
+        self._window.checkBoxOpt.stateChanged.connect(
+                self._emitCheckBoxState)
+        self._window.checkBoxProc.stateChanged.connect(
+                self._emitCheckBoxState)
+        self._window.checkBoxRun.stateChanged.connect(
+                self._emitCheckBoxState)
+        self._window.checkBoxSys.stateChanged.connect(
+                self._emitCheckBoxState)
+        self._window.checkBoxTmp.stateChanged.connect(
+                self._emitCheckBoxState)
+        self._window.checkBoxUsr.stateChanged.connect(
+                self._emitCheckBoxState)
+        self._window.checkBoxVar.stateChanged.connect(
+                self._emitCheckBoxState)
 
     @Slot(int)
-    def __emitCheckBoxState(self, newVal):
+    def _emitCheckBoxState(self, newVal):
         state = {}
-        state['bin'] = self.__window.checkBoxBin.isChecked()
-        state['dev'] = self.__window.checkBoxDev.isChecked()
-        state['etc'] = self.__window.checkBoxEtc.isChecked()
-        state['home'] = self.__window.checkBoxHome.isChecked()
-        state['opt'] = self.__window.checkBoxOpt.isChecked()
-        state['proc'] = self.__window.checkBoxProc.isChecked()
-        state['run'] = self.__window.checkBoxRun.isChecked()
-        state['sys'] = self.__window.checkBoxSys.isChecked()
-        state['tmp'] = self.__window.checkBoxTmp.isChecked()
-        state['usr'] = self.__window.checkBoxUsr.isChecked()
-        state['var'] = self.__window.checkBoxVar.isChecked()
+        state['bin'] = self._window.checkBoxBin.isChecked()
+        state['dev'] = self._window.checkBoxDev.isChecked()
+        state['etc'] = self._window.checkBoxEtc.isChecked()
+        state['home'] = self._window.checkBoxHome.isChecked()
+        state['opt'] = self._window.checkBoxOpt.isChecked()
+        state['proc'] = self._window.checkBoxProc.isChecked()
+        state['run'] = self._window.checkBoxRun.isChecked()
+        state['sys'] = self._window.checkBoxSys.isChecked()
+        state['tmp'] = self._window.checkBoxTmp.isChecked()
+        state['usr'] = self._window.checkBoxUsr.isChecked()
+        state['var'] = self._window.checkBoxVar.isChecked()
         self.checkboxesChanged.emit(state)
 
     @Slot(QModelIndex)
-    def __openBlocksPopup(self, index):
-        if self.__currentProc:
-            procsModel = self.__model.getProcsModel()
-            selectedProc = procsModel.data(self.__currentProc, Qt.ItemDataRole)
-            filestatModel = self.__model.getFilestatsModel(selectedProc)
+    def _openBlocksPopup(self, index):
+        if self._currentProc:
+            procsModel = self._model.getProcsModel()
+            selectedProc = procsModel.data(self._currentProc, Qt.ItemDataRole)
+            filestatModel = self._model.getFilestatsModel(selectedProc)
             filename = filestatModel.headerData(index.row(), Qt.Vertical,
                                                 Qt.ToolTipRole)
             if filename:
-                rwBlocksModel = self.__model.getRwBlocksModel(selectedProc,
+                rwBlocksModel = self._model.getRwBlocksModel(selectedProc,
                                                               filename)
                 popup = BlocksPopup(rwBlocksModel, filename)
-                popup.show(self.__window)
+                popup.show(self._window)
 
     @Slot()
-    def __validateRegex(self, pattern):
-        validateRegex(pattern, self.__window.filestatsLineEdit)
+    def _validateRegex(self, pattern):
+        validateRegex(pattern, self._window.filestatsLineEdit)
 
     @Slot()
     def disconnectSignalsSlot(self):
-        self.__disconnectSignals(self.__currentProc)
+        self._disconnectSignals(self._currentProc)
 
-    def __disconnectSignals(self, previous):
+    def _disconnectSignals(self, previous):
         if previous:
-            procsModel = self.__model.getProcsModel()
+            procsModel = self._model.getProcsModel()
             prevProc = procsModel.data(previous, Qt.ItemDataRole)
             if prevProc:
-                filestatModel = self.__model.getFilestatsModel(prevProc)
+                filestatModel = self._model.getFilestatsModel(prevProc)
                 self.checkboxesChanged.disconnect(
                         filestatModel.setFilterCheckboxes)
-                self.__window.filestatsLineEdit.textChanged.disconnect(
+                self._window.filestatsLineEdit.textChanged.disconnect(
                         filestatModel.setFilterRegularExpression)
 
     @Slot()
     def showSelectedProc(self, current, previous):
-        self.__disconnectSignals(previous)
+        self._disconnectSignals(previous)
 
         # connect new filestats model
-        procsModel = self.__model.getProcsModel()
-        self.__currentProc = current
+        procsModel = self._model.getProcsModel()
+        self._currentProc = current
         selectedProc = procsModel.data(current, Qt.ItemDataRole)
-        filestatModel = self.__model.getFilestatsModel(selectedProc)
+        filestatModel = self._model.getFilestatsModel(selectedProc)
         self.checkboxesChanged.connect(filestatModel.setFilterCheckboxes)
-        self.__window.filestatsLineEdit.textChanged.connect(
+        self._window.filestatsLineEdit.textChanged.connect(
                 filestatModel.setFilterRegularExpression)
-        regex = self.__window.filestatsLineEdit.text()
-        self.__window.filestatsLineEdit.textChanged.emit(regex)
+        regex = self._window.filestatsLineEdit.text()
+        self._window.filestatsLineEdit.textChanged.emit(regex)
 
         # show new filestats model
-        self.__window.filestatsTableView.setModel(filestatModel)
+        self._window.filestatsTableView.setModel(filestatModel)

@@ -15,13 +15,13 @@ class Model (QObject):
 
     def __init__(self, files):
         QObject.__init__(self)
-        self.__procsModel = None
-        self.__filestatModels = None
-        self.__rwBlocksModels = None
-        self.__syscallModels = None
+        self._procsModel = None
+        self._filestatModels = None
+        self._rwBlocksModels = None
+        self._syscallModels = None
         self.setFiles(files)
 
-    def __parseFiles(self, files):
+    def _parseFiles(self, files):
         newProcStats = {}
         for filename in files:
             run, host, rank = os.path.splitext(
@@ -39,7 +39,7 @@ class Model (QObject):
         newRwBlocksModels = {}  # dict ((host, rank) -> files -> blocksModel)
         newSyscallModels = {}  # dict ((host, rank) -> syscallModel)
         if files:
-            newStats = self.__parseFiles(files)
+            newStats = self._parseFiles(files)
             newProcs = [*newStats]
             for proc, stat in newStats.items():
                 fstatsModel = FilestatsModel(stat['file statistics'])
@@ -60,38 +60,38 @@ class Model (QObject):
 
         self.modelsWillChange.emit()
 
-        self.__files = files
-        self.__procStats = newStats
-        self.__procsModel = ProcessesModel(newProcs)
-        self.__filestatModels = newFilestatModels
-        self.__rwBlocksModels = newRwBlocksModels
-        self.__syscallModels = newSyscallModels
+        self._files = files
+        self._procStats = newStats
+        self._procsModel = ProcessesModel(newProcs)
+        self._filestatModels = newFilestatModels
+        self._rwBlocksModels = newRwBlocksModels
+        self._syscallModels = newSyscallModels
         self.modelsChanged.emit()
 
     def getProcsModel(self):
-        return self.__procsModel
+        return self._procsModel
 
     def getFilestatsModel(self, proc):
-        return self.__filestatModels[proc]
+        return self._filestatModels[proc]
 
     def getRwBlocksModel(self, proc, filename):
-        return self.__rwBlocksModels[proc][filename]
+        return self._rwBlocksModels[proc][filename]
 
     def getSyscallsModel(self, proc):
-        return self.__syscallModels[proc]
+        return self._syscallModels[proc]
 
 
 class CheckboxRegexSortFilterProxyTableModel (QSortFilterProxyModel):
 
     def __init__(self, parent=None):
         QSortFilterProxyModel.__init__(self, parent)
-        self.__checkboxState = {}
+        self._checkboxState = {}
 
     def filterAcceptsColumn(self, column, parent):
         return True
 
-    def __fileCheckboxFiltered(self, fname):
-        for prefix, flag in self.__checkboxState.items():
+    def _fileCheckboxFiltered(self, fname):
+        for prefix, flag in self._checkboxState.items():
             if flag and (fname.startswith(prefix) or
                          fname.startswith('/' + prefix)):
                 return True
@@ -100,14 +100,14 @@ class CheckboxRegexSortFilterProxyTableModel (QSortFilterProxyModel):
     def filterAcceptsRow(self, row, parent):
         regex = self.filterRegularExpression()
         name = self.sourceModel().headerData(row, Qt.Vertical, Qt.ToolTipRole)
-        if name and regex.isValid() and not self.__fileCheckboxFiltered(name):
+        if name and regex.isValid() and not self._fileCheckboxFiltered(name):
             return regex.match(name).hasMatch()
         else:
             return False
 
     @Slot(dict)
     def setFilterCheckboxes(self, checkboxState):
-        self.__checkboxState = checkboxState
+        self._checkboxState = checkboxState
         self.invalidate()
 
 

@@ -16,11 +16,11 @@ class RwBlocksModel (QAbstractTableModel):
 
     def __init__(self, filestats, parent=None):
         QAbstractTableModel.__init__(self, parent)
-        self.__filestats = filestats
+        self._filestats = filestats
 
     def rowCount(self, parent=QModelIndex()):
-        return max(len(self.__filestats['read-blocks']),
-                   len(self.__filestats['write-blocks']))
+        return max(len(self._filestats['read-blocks']),
+                   len(self._filestats['write-blocks']))
 
     def columnCount(self, parent=QModelIndex()):
         return 4
@@ -31,13 +31,13 @@ class RwBlocksModel (QAbstractTableModel):
             return None
         else:
             if index.column() < 2:
-                blocks = self.__filestats['read-blocks']
+                blocks = self._filestats['read-blocks']
                 if index.row() < len(blocks):
                     return blocks[index.row()][index.column()]
                 else:
                     return None
             elif index.column() > 1 and index.column() < 4:
-                blocks = self.__filestats['write-blocks']
+                blocks = self._filestats['write-blocks']
                 if index.row() < len(blocks):
                     return blocks[index.row()][index.column() % 2]
                 else:

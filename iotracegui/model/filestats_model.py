@@ -49,10 +49,10 @@ class FilestatsModel (QAbstractTableModel):
 
     def __init__(self, filestats, parent=None):
         QAbstractTableModel.__init__(self, parent)
-        self.__filestats = filestats
+        self._filestats = filestats
 
     def rowCount(self, parent=QModelIndex()):
-        return len(self.__filestats)
+        return len(self._filestats)
 
     def columnCount(self, parent=QModelIndex()):
         return 20
@@ -62,7 +62,7 @@ class FilestatsModel (QAbstractTableModel):
                 index.row() >= self.rowCount()):
             return None
         elif role == Qt.DisplayRole:
-            fStat = self.__filestats[index.row()]
+            fStat = self._filestats[index.row()]
             subStat = fStat[FilestatsModel.columnMapping[index.column()]]
             relativeColumn = index.column() % 5
             if relativeColumn == 0:
@@ -91,7 +91,7 @@ class FilestatsModel (QAbstractTableModel):
             if orientation == Qt.Horizontal:
                 return self.columnNames[section]
             else:
-                fname = self.__filestats[section]["filename"]
+                fname = self._filestats[section]["filename"]
                 if len(fname) > 43:
                     return fname[:20] + ' ... ' + fname[-20:]
                 else:
@@ -100,6 +100,6 @@ class FilestatsModel (QAbstractTableModel):
             if orientation == Qt.Horizontal:
                 return self.columnTooltips[section]
             else:
-                return self.__filestats[section]["filename"]
+                return self._filestats[section]["filename"]
         else:
             return None

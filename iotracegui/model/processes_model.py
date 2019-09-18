@@ -5,19 +5,19 @@ class ProcessesModel (QAbstractListModel):
 
     def __init__(self, procs, parent=None):
         QAbstractListModel.__init__(self, parent)
-        self.__procs = procs
+        self._procs = procs
 
     def rowCount(self, parent=QModelIndex()):
-        return len(self.__procs)
+        return len(self._procs)
 
     def data(self, index, role):
         if (not index.isValid() or index.row() >= self.rowCount()):
             return None
         elif role == Qt.DisplayRole:
-            proc = self.__procs[index.row()]
+            proc = self._procs[index.row()]
             return f"{proc[0]} - {proc[1]} - rank {proc[2]}"
         elif role == Qt.ItemDataRole:
-            return self.__procs[index.row()]
+            return self._procs[index.row()]
         else:
             return None
 
@@ -31,7 +31,7 @@ class ProcessesModel (QAbstractListModel):
             return f"Row {section}"
 
     def setProcs(self, procs):
-        self.__procs = procs
+        self._procs = procs
 
     def getProcs(self):
-        return self.__procs
+        return self._procs

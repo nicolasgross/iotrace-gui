@@ -13,27 +13,27 @@ class MainWindow (QMainWindow, Ui_MainWindow):
     def __init__(self, model):
         super().__init__()
         self.setupUi(self)
-        self.__model = model
-        self.__initMenu()
-        self.__initTabs()
-        self.__initProcListView()
+        self._model = model
+        self._initMenu()
+        self._initTabs()
+        self._initProcListView()
 
-    def __initMenu(self):
+    def _initMenu(self):
         self.actionQuit.triggered.connect(self.close)
-        self.actionOpen.triggered.connect(self.__menuFileOpen)
+        self.actionOpen.triggered.connect(self._menuFileOpen)
         # TODO help about
 
-    def __initProcListView(self):
-        self.__model.modelsChanged.connect(self.__refreshProcListView)
-        self.processesListView.setModel(self.__model.getProcsModel())
+    def _initProcListView(self):
+        self._model.modelsChanged.connect(self._refreshProcListView)
+        self.processesListView.setModel(self._model.getProcsModel())
         self.processesListView.selectionModel(). \
-            currentChanged.connect(self.__filestatsTab.showSelectedProc)
+            currentChanged.connect(self._filestatsTab.showSelectedProc)
         self.processesListView.selectionModel(). \
-            currentChanged.connect(self.__syscallsTab.showSelectedProc)
+            currentChanged.connect(self._syscallsTab.showSelectedProc)
 
-    def __initTabs(self):
-        self.__filestatsTab = FilestatsTab(self, self.__model)
-        self.__syscallsTab = SyscallsTab(self, self.__model)
+    def _initTabs(self):
+        self._filestatsTab = FilestatsTab(self, self._model)
+        self._syscallsTab = SyscallsTab(self, self._model)
 
     def closeEvent(self, event):
         result = QMessageBox.question(
@@ -44,12 +44,12 @@ class MainWindow (QMainWindow, Ui_MainWindow):
         else:
             event.ignore()
 
-    def __menuFileOpen(self):
+    def _menuFileOpen(self):
         files = QFileDialog.getOpenFileNames(self, "Open iotrace files", "",
                                              "iotrace JSON files (*.json)")
         if files[0]:
             try:
-                self.__model.setFiles(files[0])
+                self._model.setFiles(files[0])
             except ValueError:
                 errorDialog = QErrorMessage(self)
                 errorDialog.showMessage(
@@ -63,16 +63,16 @@ class MainWindow (QMainWindow, Ui_MainWindow):
                         "Unexpected error occurred" + os.linesep + e.message)
 
     @Slot()
-    def __refreshProcListView(self):
-        self.processesListView.selectionModel(). \
-            currentChanged.disconnect(self.__filestatsTab.showSelectedProc)
-        self.processesListView.selectionModel(). \
-            currentChanged.disconnect(self.__syscallsTab.showSelectedProc)
+    def _refreshProcListView(self):
+        self.processesListView.selectionModel().currentChanged.disconnect(
+                self._filestatsTab.showSelectedProc)
+        self.processesListView.selectionModel().currentChanged.disconnect(
+                self._syscallsTab.showSelectedProc)
 
-        self.processesListView.setModel(self.__model.getProcsModel())
+        self.processesListView.setModel(self._model.getProcsModel())
 
-        self.processesListView.selectionModel(). \
-            currentChanged.connect(self.__filestatsTab.showSelectedProc)
-        self.processesListView.selectionModel(). \
-            currentChanged.connect(self.__syscallsTab.showSelectedProc)
+        self.processesListView.selectionModel().currentChanged.connect(
+                self._filestatsTab.showSelectedProc)
+        self.processesListView.selectionModel().currentChanged.connect(
+                self._syscallsTab.showSelectedProc)
         self.processesListView.setFocus()
