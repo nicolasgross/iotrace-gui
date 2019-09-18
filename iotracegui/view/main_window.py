@@ -50,17 +50,15 @@ class MainWindow (QMainWindow, Ui_MainWindow):
         if files[0]:
             try:
                 self._model.setFiles(files[0])
-            except ValueError:
-                errorDialog = QErrorMessage(self)
-                errorDialog.showMessage(
-                        "The selected JSON file is not compatible with "
-                        "iotrace-GUI." + os.linesep +
-                        "Ensure that filenames were not changed from "
-                        "filenames that were assigned by iotrace.")
+            except (ValueError, TypeError) as e:
+                QMessageBox.warning(
+                        self, "Warning", "The selected JSON file is not "
+                        "compatible with iotrace-GUI." + os.linesep +
+                        os.linesep + str(e))
             except Exception as e:
-                errorDialog = QErrorMessage(self)
-                errorDialog.showMessage(
-                        "Unexpected error occurred" + os.linesep + str(e))
+                QMessageBox.warning(
+                        self, "Warning", "Unexpected error occurred" +
+                        os.linesep + os.linesep + str(e))
 
     @Slot()
     def _refreshProcListView(self):
