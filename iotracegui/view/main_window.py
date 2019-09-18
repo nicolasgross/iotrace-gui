@@ -1,46 +1,52 @@
 import os
-from PySide2.QtUiTools import QUiLoader
-from PySide2.QtWidgets import QFileDialog, QErrorMessage
-from PySide2.QtCore import QFile, Slot
+from PySide2.QtWidgets import QFileDialog, QErrorMessage, QMainWindow, \
+        QMessageBox
+from PySide2.QtCore import Slot
 
+from iotracegui.view.ui_main_window import Ui_MainWindow
 from iotracegui.view.filestats_tab import FilestatsTab
 from iotracegui.view.syscalls_tab import SyscallsTab
 
 
-class MainWindow:
+class MainWindow (QMainWindow, Ui_MainWindow):
 
-    def __init__(self, app, model):
-        self.__app = app
+    def __init__(self, model):
+        super().__init__()
+        self.setupUi(self)
         self.__model = model
-        uiFile = QFile("iotracegui/view/main_window.ui")
-        uiFile.open(QFile.ReadOnly)
-        self.__window = QUiLoader().load(uiFile)
-        uiFile.close()
         self.__initMenu()
         self.__initTabs()
         self.__initProcListView()
 
     def __initMenu(self):
-        self.__window.actionQuit.triggered.connect(self.__app.exit) # TODO confirmation
-        self.__window.actionOpen.triggered.connect(self.__menuFileOpen)
+        self.actionQuit.triggered.connect(self.close)
+        self.actionOpen.triggered.connect(self.__menuFileOpen)
         # TODO help about
 
     def __initProcListView(self):
         self.__model.modelsChanged.connect(self.__refreshProcListView)
-        self.__window.processesListView.setModel(self.__model.getProcsModel())
-        self.__window.processesListView.selectionModel(). \
+        self.processesListView.setModel(self.__model.getProcsModel())
+        self.processesListView.selectionModel(). \
             currentChanged.connect(self.__filestatsTab.showSelectedProc)
-        self.__window.processesListView.selectionModel(). \
+        self.processesListView.selectionModel(). \
             currentChanged.connect(self.__syscallsTab.showSelectedProc)
 
     def __initTabs(self):
-        self.__filestatsTab = FilestatsTab(self.__window, self.__model)
-        self.__syscallsTab = SyscallsTab(self.__window, self.__model)
+        self.__filestatsTab = FilestatsTab(self, self.__model)
+        self.__syscallsTab = SyscallsTab(self, self.__model)
+
+    def closeEvent(self, event):
+        result = QMessageBox.question(
+                self, 'Confirm Quit', 'Are you sure you want to quit?',
+                QMessageBox.Yes | QMessageBox.No)
+        if result == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
 
     def __menuFileOpen(self):
-        files = QFileDialog.getOpenFileNames(
-                self.__window, "Open iotrace files", "",
-                "iotrace JSON files (*.json)")
+        files = QFileDialog.getOpenFileNames(self, "Open iotrace files", "",
+                                             "iotrace JSON files (*.json)")
         if files[0]:
             try:
                 self.__model.setFiles(files[0])
@@ -55,18 +61,15 @@ class MainWindow:
 
     @Slot()
     def __refreshProcListView(self):
-        self.__window.processesListView.selectionModel(). \
+        self.processesListView.selectionModel(). \
             currentChanged.disconnect(self.__filestatsTab.showSelectedProc)
-        self.__window.processesListView.selectionModel(). \
+        self.processesListView.selectionModel(). \
             currentChanged.disconnect(self.__syscallsTab.showSelectedProc)
 
-        self.__window.processesListView.setModel(self.__model.getProcsModel())
+        self.processesListView.setModel(self.__model.getProcsModel())
 
-        self.__window.processesListView.selectionModel(). \
+        self.processesListView.selectionModel(). \
             currentChanged.connect(self.__filestatsTab.showSelectedProc)
-        self.__window.processesListView.selectionModel(). \
+        self.processesListView.selectionModel(). \
             currentChanged.connect(self.__syscallsTab.showSelectedProc)
-        self.__window.processesListView.setFocus()
-
-    def show(self):
-        self.__window.show()
+        self.processesListView.setFocus()
