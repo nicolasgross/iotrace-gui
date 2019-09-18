@@ -109,6 +109,7 @@ class FilestatsTab (QObject):
                 filestatModel.setFilterRegularExpression)
         regex = self._window.filestatsLineEdit.text()
         self._window.filestatsLineEdit.textChanged.emit(regex)
+        self._emitCheckBoxState(0)
 
         # show new filestats model
         self._window.filestatsTableView.setModel(filestatModel)
