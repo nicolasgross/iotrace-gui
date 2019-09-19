@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'ui_main_window.ui',
 # licensing of 'ui_main_window.ui' applies.
 #
-# Created: Wed Sep 18 16:18:17 2019
+# Created: Thu Sep 19 14:46:00 2019
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -23,6 +23,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.processesListView = QtWidgets.QListView(self.centralwidget)
         self.processesListView.setMaximumSize(QtCore.QSize(250, 16777215))
+        self.processesListView.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
         self.processesListView.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.processesListView.setObjectName("processesListView")
         self.horizontalLayout_4.addWidget(self.processesListView)

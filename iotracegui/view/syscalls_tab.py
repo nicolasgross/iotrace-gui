@@ -8,7 +8,6 @@ class SyscallsTab:
     def __init__(self, window, model):
         self._window = window
         self._model = model
-        self._model.modelsWillChange.connect(self.disconnectSignals)
         self._window.syscallsLineEdit.textChanged.connect(
                 self._validateRegex)
         self._window.syscallsTableView.addAction(
@@ -18,7 +17,6 @@ class SyscallsTab:
     def _validateRegex(self, pattern):
         validateRegex(pattern, self._window.syscallsLineEdit)
 
-    @Slot()
     def disconnectSignals(self):
         syscallsModel = self._window.syscallsTableView.model()
         if syscallsModel:

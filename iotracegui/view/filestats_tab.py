@@ -13,7 +13,6 @@ class FilestatsTab (QObject):
         QObject.__init__(self, parent)
         self._window = window
         self._model = model
-        self._model.modelsWillChange.connect(self.disconnectSignals)
         self._window.filestatsLineEdit.textChanged.connect(
                 self._validateRegex)
         self._window.filestatsTableView.addAction(
@@ -80,7 +79,6 @@ class FilestatsTab (QObject):
     def _validateRegex(self, pattern):
         validateRegex(pattern, self._window.filestatsLineEdit)
 
-    @Slot()
     def disconnectSignals(self):
         filestatModel = self._window.filestatsTableView.model()
         if filestatModel:

@@ -30,8 +30,21 @@ class ProcessesModel (QAbstractListModel):
         else:
             return f"Row {section}"
 
-    def setProcs(self, procs):
-        self._procs = procs
+    def insertRows(self, row, count, parent=None):
+        self.beginInsertRows(QModelIndex(), row, row + count - 1)
+        self.endInsertRows()
+        return True
+
+    def removeRow(self, row, parent=None):
+        self.beginRemoveRows(QModelIndex(), row, row)
+        self.endRemoveRows()
+        return True
+
+    def insertProcs(self, procs, row):
+        self._procs[row:row] = procs
+
+    def removeProc(self, proc):
+        self._procs.remove(proc)
 
     def getProcs(self):
         return self._procs

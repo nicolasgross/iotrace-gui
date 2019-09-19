@@ -1,10 +1,11 @@
 import os
-from PySide2.QtWidgets import QFileDialog, QMainWindow, QMessageBox
-from PySide2.QtCore import Slot
+from PySide2.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QAction
+from PySide2.QtCore import Slot, QItemSelection, Qt
 
 from iotracegui.view.ui_main_window import Ui_MainWindow
 from iotracegui.view.filestats_tab import FilestatsTab
 from iotracegui.view.syscalls_tab import SyscallsTab
+from iotracegui.model.model import AlreadyOpenError
 
 
 class MainWindow (QMainWindow, Ui_MainWindow):
@@ -23,12 +24,47 @@ class MainWindow (QMainWindow, Ui_MainWindow):
         # TODO help about
 
     def _initProcListView(self):
-        self._model.modelsChanged.connect(self._refreshProcListView)
+        self._removeAction = QAction("Remove", self)
+        self._removeAction.setEnabled(False)
+        self._removeAction.triggered.connect(self._removeProcs)
+        self._mergeAction = QAction("Merge", self)
+        self._mergeAction.setEnabled(False)
+        self._mergeAction.triggered.connect(self._mergeProcs)
+        self.processesListView.addAction(self._removeAction)
+        self.processesListView.addAction(self._mergeAction)
         self.processesListView.setModel(self._model.getProcsModel())
         self.processesListView.selectionModel().selectionChanged. \
             connect(self._filestatsTab.showSelectedProc)
         self.processesListView.selectionModel().selectionChanged. \
             connect(self._syscallsTab.showSelectedProc)
+        self.processesListView.selectionModel().selectionChanged. \
+            connect(self._updateContextMenuState)
+
+    @Slot()
+    def _removeProcs(self):
+        selectedIndexes = self.processesListView.selectedIndexes()
+        selectedProcs = []
+        for index in selectedIndexes:
+            selectedProcs.append(self._model.getProcsModel().data(
+                index, Qt.ItemDataRole))
+        self.processesListView.clearSelection()
+        selectedIndexes.sort(reverse=True)
+        for index in selectedIndexes:
+            self._model.getProcsModel().removeRow(index.row())
+        for proc in selectedProcs:
+            self._model.removeProc(proc)
+
+    @Slot()
+    def _mergeProcs(self):
+        # TODO
+        pass
+
+    @Slot(QItemSelection, QItemSelection)
+    def _updateContextMenuState(self, selected, deselected):
+        hasSelection = self.processesListView.selectionModel().hasSelection()
+        self._removeAction.setEnabled(hasSelection)
+        selectedIndexes = self.processesListView.selectedIndexes()
+        self._mergeAction.setEnabled(len(selectedIndexes) > 1)
 
     def _initTabs(self):
         self._filestatsTab = FilestatsTab(self, self._model)
@@ -48,28 +84,13 @@ class MainWindow (QMainWindow, Ui_MainWindow):
                                              "iotrace JSON files (*.json)")
         if files[0]:
             try:
-                self._model.setFiles(files[0])
-            except (ValueError, TypeError) as e:
+                self._model.openFiles(files[0])
+            except (KeyError, ValueError, TypeError) as e:
                 QMessageBox.warning(
                         self, "Warning", "The selected JSON file is not "
-                        "compatible with iotrace-GUI." + os.linesep +
+                        "compatible with iotrace-GUI:" + os.linesep +
                         os.linesep + str(e))
-            except Exception as e:
+            except AlreadyOpenError as e:
                 QMessageBox.warning(
-                        self, "Warning", "Unexpected error occurred" +
+                        self, "Warning", "Some files are already loaded:" +
                         os.linesep + os.linesep + str(e))
-
-    @Slot()
-    def _refreshProcListView(self):
-        self.processesListView.selectionModel().selectionChanged.disconnect(
-                self._filestatsTab.showSelectedProc)
-        self.processesListView.selectionModel().selectionChanged.disconnect(
-                self._syscallsTab.showSelectedProc)
-
-        self.processesListView.setModel(self._model.getProcsModel())
-
-        self.processesListView.selectionModel().selectionChanged.connect(
-                self._filestatsTab.showSelectedProc)
-        self.processesListView.selectionModel().selectionChanged.connect(
-                self._syscallsTab.showSelectedProc)
-        self.processesListView.setFocus()

@@ -1,5 +1,5 @@
 import json
-from PySide2.QtCore import QObject, Signal, Qt, QSortFilterProxyModel, Slot
+from PySide2.QtCore import Qt, QSortFilterProxyModel, Slot
 
 from iotracegui.model.processes_model import ProcessesModel
 from iotracegui.model.filestats_model import FilestatsModel
@@ -7,18 +7,13 @@ from iotracegui.model.rw_blocks_model import RwBlocksModel
 from iotracegui.model.syscalls_model import SyscallsModel
 
 
-class Model (QObject):
-
-    modelsWillChange = Signal()
-    modelsChanged = Signal()
+class Model:
 
     def __init__(self, files):
-        QObject.__init__(self)
-        self._procsModel = None
-        self._filestatModels = None
-        self._rwBlocksModels = None
-        self._syscallModels = None
-        self.setFiles(files)
+        self._procsModel = ProcessesModel([])
+        self._filestatModels = {}  # (id, host, rank) -> filestatModel
+        self._rwBlocksModels = {}  # (id, host, rank) -> files -> blocksModel
+        self._syscallModels = {}  # (id, host, rank) -> syscallModel
 
     def _parseFiles(self, files):
         newProcStats = {}
@@ -29,41 +24,46 @@ class Model (QObject):
                               fileStats['rank'])] = fileStats
         return newProcStats
 
-    def setFiles(self, files):
-        newStats = {}  # dict ((host, rank) -> stats)
-        newProcs = []
-        newFilestatModels = {}  # dict ((host, rank) -> filestatModel)
-        newRwBlocksModels = {}  # dict ((host, rank) -> files -> blocksModel)
-        newSyscallModels = {}  # dict ((host, rank) -> syscallModel)
-        if files:
-            newStats = self._parseFiles(files)
-            newProcs = [*newStats]
-            for proc, stat in newStats.items():
-                fstatsModel = FilestatsModel(stat['file statistics'])
-                proxyFstatsModel = CheckboxRegexSortFilterProxyTableModel()
-                proxyFstatsModel.setSourceModel(fstatsModel)
-                newFilestatModels[proc] = proxyFstatsModel
+    def openFiles(self, files):
+        if not files:
+            return
 
-                procsRwBlocksModels = {}
-                for filestat in stat['file statistics']:
-                    procsRwBlocksModels[filestat['filename']] = RwBlocksModel(
-                            filestat)
-                newRwBlocksModels[proc] = procsRwBlocksModels
+        jsonFiles = self._parseFiles(files)
+        newProcs = [*jsonFiles]
+        alreadyOpen = []
+        for oldProc in self._procsModel.getProcs():
+            for newProc in newProcs:
+                if oldProc == newProc:
+                    alreadyOpen.append(oldProc)
+                    break
+        if alreadyOpen:
+            raise AlreadyOpenError(str(alreadyOpen))
 
-                syscallsModel = SyscallsModel(stat['unmatched syscalls'])
-                proxyScModel = RegexSortFilterProxyTableModel()
-                proxyScModel.setSourceModel(syscallsModel)
-                newSyscallModels[proc] = proxyScModel
+        for proc, stat in jsonFiles.items():
+            fstatsModel = FilestatsModel(stat['file statistics'])
+            proxyFstatsModel = CheckboxRegexSortFilterProxyTableModel()
+            proxyFstatsModel.setSourceModel(fstatsModel)
+            self._filestatModels[proc] = proxyFstatsModel
 
-        self.modelsWillChange.emit()
+            procRwBlocksModel = {}
+            for filestat in stat['file statistics']:
+                procRwBlocksModel[filestat['filename']] = \
+                    RwBlocksModel(filestat)
+            self._rwBlocksModels[proc] = procRwBlocksModel
 
-        self._files = files
-        self._procStats = newStats
-        self._procsModel = ProcessesModel(newProcs)
-        self._filestatModels = newFilestatModels
-        self._rwBlocksModels = newRwBlocksModels
-        self._syscallModels = newSyscallModels
-        self.modelsChanged.emit()
+            syscallsModel = SyscallsModel(stat['unmatched syscalls'])
+            proxyScModel = RegexSortFilterProxyTableModel()
+            proxyScModel.setSourceModel(syscallsModel)
+            self._syscallModels[proc] = proxyScModel
+
+        self._procsModel.insertProcs(newProcs, self._procsModel.rowCount())
+        self._procsModel.insertRows(self._procsModel.rowCount(), len(newProcs))
+
+    def removeProc(self, proc):
+        self._procsModel.removeProc(proc)
+        self._filestatModels.pop(proc)
+        self._rwBlocksModels.pop(proc)
+        self._syscallModels.pop(proc)
 
     def getProcsModel(self):
         return self._procsModel
@@ -76,6 +76,10 @@ class Model (QObject):
 
     def getSyscallsModel(self, proc):
         return self._syscallModels[proc]
+
+
+class AlreadyOpenError (Exception):
+    pass
 
 
 class CheckboxRegexSortFilterProxyTableModel (QSortFilterProxyModel):
