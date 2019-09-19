@@ -10,7 +10,7 @@ class FilestatsTab (QObject):
     checkboxesChanged = Signal(dict)
 
     def __init__(self, window, model, parent=None):
-        QObject.__init__(self, parent)
+        super().__init__(parent)
         self._window = window
         self._model = model
         self._window.filestatsLineEdit.textChanged.connect(
@@ -63,9 +63,10 @@ class FilestatsTab (QObject):
 
     @Slot(QModelIndex)
     def _openBlocksPopup(self, index):
-        if self._currentProc:
+        selectedProcs = self._window.processesListView.selectedIndexes()
+        if len(selectedProcs) == 1:
             procsModel = self._model.getProcsModel()
-            selectedProc = procsModel.data(self._currentProc, Qt.ItemDataRole)
+            selectedProc = procsModel.data(selectedProcs[0], Qt.ItemDataRole)
             filestatModel = self._model.getFilestatsModel(selectedProc)
             filename = filestatModel.headerData(index.row(), Qt.Vertical,
                                                 Qt.ToolTipRole)
