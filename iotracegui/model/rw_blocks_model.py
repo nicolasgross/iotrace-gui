@@ -15,7 +15,7 @@ class RwBlocksModel (QAbstractTableModel):
         ]
 
     def __init__(self, filestats, parent=None):
-        QAbstractTableModel.__init__(self, parent)
+        super().__init__(parent)
         self._filestats = filestats
 
     def rowCount(self, parent=QModelIndex()):
@@ -27,9 +27,11 @@ class RwBlocksModel (QAbstractTableModel):
 
     def data(self, index, role):
         if (not index.isValid() or index.column() >= self.columnCount() or
-                index.row() >= self.rowCount() or role != Qt.DisplayRole):
+                index.row() >= self.rowCount()):
             return None
-        else:
+        elif role == Qt.TextAlignmentRole:
+            return Qt.AlignRight
+        elif role == Qt.DisplayRole:
             if index.column() < 2:
                 blocks = self._filestats['read-blocks']
                 if index.row() < len(blocks):
@@ -42,6 +44,8 @@ class RwBlocksModel (QAbstractTableModel):
                     return blocks[index.row()][index.column() % 2]
                 else:
                     return None
+        else:
+            return None
 
     def headerData(self, section, orientation, role):
         if role == Qt.DisplayRole:

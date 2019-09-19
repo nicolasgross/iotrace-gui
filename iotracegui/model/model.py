@@ -85,7 +85,7 @@ class AlreadyOpenError (Exception):
 class CheckboxRegexSortFilterProxyTableModel (QSortFilterProxyModel):
 
     def __init__(self, parent=None):
-        QSortFilterProxyModel.__init__(self, parent)
+        super().__init__(parent)
         self._checkboxState = {}
 
     def filterAcceptsColumn(self, column, parent):
@@ -115,7 +115,7 @@ class CheckboxRegexSortFilterProxyTableModel (QSortFilterProxyModel):
 class RegexSortFilterProxyTableModel (QSortFilterProxyModel):
 
     def __init__(self, parent=None):
-        QSortFilterProxyModel.__init__(self, parent)
+        super().__init__(parent)
 
     def filterAcceptsColumn(self, column, parent):
         return True

@@ -14,7 +14,7 @@ class SyscallsModel (QAbstractTableModel):
         ]
 
     def __init__(self, syscalls, parent=None):
-        QAbstractTableModel.__init__(self, parent)
+        super().__init__(parent)
         self._syscalls = syscalls
 
     def rowCount(self, parent=QModelIndex()):
@@ -25,9 +25,11 @@ class SyscallsModel (QAbstractTableModel):
 
     def data(self, index, role):
         if (not index.isValid() or index.column() >= self.columnCount() or
-                index.row() >= self.rowCount() or role != Qt.DisplayRole):
+                index.row() >= self.rowCount()):
             return None
-        else:
+        elif role == Qt.TextAlignmentRole:
+            return Qt.AlignRight
+        elif role == Qt.DisplayRole:
             scStat = self._syscalls[index.row()]
             if index.column() == 0:
                 return scStat['count']
@@ -38,6 +40,8 @@ class SyscallsModel (QAbstractTableModel):
                     return 0
                 else:
                     return (scStat['total ns'] / 1000000.0) / scStat['count']
+        else:
+            return None
 
     def headerData(self, section, orientation, role):
         if role == Qt.DisplayRole:

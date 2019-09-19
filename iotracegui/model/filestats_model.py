@@ -48,7 +48,7 @@ class FilestatsModel (QAbstractTableModel):
         ]
 
     def __init__(self, filestats, parent=None):
-        QAbstractTableModel.__init__(self, parent)
+        super().__init__(parent)
         self._filestats = filestats
 
     def rowCount(self, parent=QModelIndex()):
@@ -61,6 +61,8 @@ class FilestatsModel (QAbstractTableModel):
         if (not index.isValid() or index.column() >= self.columnCount() or
                 index.row() >= self.rowCount()):
             return None
+        elif role == Qt.TextAlignmentRole:
+            return Qt.AlignRight
         elif role == Qt.DisplayRole:
             fStat = self._filestats[index.row()]
             subStat = fStat[FilestatsModel.columnMapping[index.column()]]

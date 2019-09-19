@@ -4,7 +4,7 @@ from PySide2.QtCore import Qt, QAbstractListModel, QModelIndex
 class ProcessesModel (QAbstractListModel):
 
     def __init__(self, procs, parent=None):
-        QAbstractListModel.__init__(self, parent)
+        super().__init__(parent)
         self._procs = procs
 
     def rowCount(self, parent=QModelIndex()):
