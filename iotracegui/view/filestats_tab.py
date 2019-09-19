@@ -2,7 +2,7 @@ from PySide2.QtCore import Qt, Signal, Slot, QObject, QModelIndex, \
     QItemSelection
 
 from iotracegui.view.shared_func import validateRegex, CopySelectedCellsAction
-from iotracegui.view.blocks_popup import BlocksPopup
+from iotracegui.view.blocks_dialog import BlocksDialog
 
 
 class FilestatsTab (QObject):
@@ -18,7 +18,7 @@ class FilestatsTab (QObject):
         self._window.filestatsTableView.addAction(
                 CopySelectedCellsAction(self._window.filestatsTableView))
         self._window.filestatsTableView.doubleClicked.connect(
-                self._openBlocksPopup)
+                self._openBlocksDialog)
         self._initFilterCheckBoxes()
 
     def _initFilterCheckBoxes(self):
@@ -62,7 +62,7 @@ class FilestatsTab (QObject):
         self.checkboxesChanged.emit(state)
 
     @Slot(QModelIndex)
-    def _openBlocksPopup(self, index):
+    def _openBlocksDialog(self, index):
         selectedProcs = self._window.processesListView.selectedIndexes()
         if len(selectedProcs) == 1:
             procsModel = self._model.getProcsModel()
@@ -73,8 +73,8 @@ class FilestatsTab (QObject):
             if filename:
                 rwBlocksModel = self._model.getRwBlocksModel(selectedProc,
                                                              filename)
-                popup = BlocksPopup(rwBlocksModel, filename)
-                popup.show(self._window)
+                dialog = BlocksDialog(rwBlocksModel, filename, self._window)
+                dialog.show()
 
     @Slot(str)
     def _validateRegex(self, pattern):
