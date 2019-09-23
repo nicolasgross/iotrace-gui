@@ -20,6 +20,12 @@
    <string>iotrace-GUI</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <layout class="QHBoxLayout" name="horizontalLayout_4">
     <property name="spacing">
      <number>5</number>
@@ -38,9 +44,12 @@
     </property>
     <item>
      <widget class="QListView" name="processesListView">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="maximumSize">
        <size>
-        <width>250</width>
+        <width>350</width>
         <height>16777215</height>
        </size>
       </property>

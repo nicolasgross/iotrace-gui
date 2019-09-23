@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'ui_main_window.ui',
 # licensing of 'ui_main_window.ui' applies.
 #
-# Created: Mon Sep 23 10:28:35 2019
+# Created: Mon Sep 23 14:56:33 2019
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -16,13 +16,19 @@ class Ui_MainWindow(object):
         MainWindow.resize(1000, 532)
         MainWindow.setMinimumSize(QtCore.QSize(1000, 300))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
+        self.centralwidget.setSizePolicy(sizePolicy)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.centralwidget)
         self.horizontalLayout_4.setSpacing(5)
         self.horizontalLayout_4.setContentsMargins(5, 5, 5, 5)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.processesListView = QtWidgets.QListView(self.centralwidget)
-        self.processesListView.setMaximumSize(QtCore.QSize(250, 16777215))
+        self.processesListView.setEnabled(True)
+        self.processesListView.setMaximumSize(QtCore.QSize(350, 16777215))
         self.processesListView.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
         self.processesListView.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         self.processesListView.setObjectName("processesListView")

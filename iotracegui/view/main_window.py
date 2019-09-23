@@ -62,8 +62,16 @@ class MainWindow (QMainWindow, Ui_MainWindow):
         for index in selectedIndexes:
             selectedProcs.append(self._model.getProcsModel().data(
                 index, Qt.ItemDataRole))
-        # TODO ask for (id, hostname, rank)
-        self._model.mergeAndAdd(('merge', 'host', '0'), selectedProcs)
+        merge_index = 0
+        trace_id = selectedProcs[0][0]
+        hostname = selectedProcs[0][1]
+        merge_proc = (trace_id + '_MERGE_' + str(merge_index), hostname,
+                      'NULL')
+        while merge_proc in self._model.getProcsModel().getProcs():
+            merge_index += 1
+            merge_proc = (trace_id + '_MERGE_' + str(merge_index), hostname,
+                          'NULL')
+        self._model.mergeAndAdd(merge_proc, selectedProcs)
 
     @Slot(QItemSelection, QItemSelection)
     def _updateContextMenuState(self, selected, deselected):
