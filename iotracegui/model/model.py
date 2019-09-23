@@ -195,8 +195,8 @@ class CheckboxRegexSortFilterProxyTableModel (QSortFilterProxyModel):
 
     def _fileCheckboxFiltered(self, fname):
         for prefix, flag in self._checkboxState.items():
-            if flag and (fname.startswith(prefix) or
-                         fname.startswith('/' + prefix)):
+            if not flag and (fname.startswith(prefix) or
+                             fname.startswith('/' + prefix)):
                 return True
         return False
 

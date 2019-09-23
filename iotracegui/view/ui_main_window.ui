@@ -89,7 +89,7 @@
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>&lt;u&gt;Filter:&lt;/u&gt;</string>
+           <string>&lt;u&gt;Filter out:&lt;/u&gt;</string>
           </property>
          </widget>
         </item>
@@ -103,12 +103,18 @@
             <property name="text">
              <string>/bin</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="checkBoxDev">
             <property name="text">
              <string>/dev</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -117,12 +123,18 @@
             <property name="text">
              <string>/etc</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="checkBoxHome">
             <property name="text">
              <string>/home</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -131,12 +143,18 @@
             <property name="text">
              <string>/opt</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="checkBoxProc">
             <property name="text">
              <string>/proc</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -145,12 +163,18 @@
             <property name="text">
              <string>/run</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="checkBoxSys">
             <property name="text">
              <string>/sys</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -159,6 +183,9 @@
             <property name="text">
              <string>/tmp</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item>
@@ -166,12 +193,18 @@
             <property name="text">
              <string>/usr</string>
             </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="checkBoxVar">
             <property name="text">
              <string>/var</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>

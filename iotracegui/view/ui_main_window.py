@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'ui_main_window.ui',
 # licensing of 'ui_main_window.ui' applies.
 #
-# Created: Mon Sep 23 14:56:33 2019
+# Created: Mon Sep 23 15:03:22 2019
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -48,36 +48,47 @@ class Ui_MainWindow(object):
         self.horizontalLayout.setSpacing(10)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.checkBoxBin = QtWidgets.QCheckBox(self.fileStatistics)
+        self.checkBoxBin.setChecked(True)
         self.checkBoxBin.setObjectName("checkBoxBin")
         self.horizontalLayout.addWidget(self.checkBoxBin)
         self.checkBoxDev = QtWidgets.QCheckBox(self.fileStatistics)
+        self.checkBoxDev.setChecked(True)
         self.checkBoxDev.setObjectName("checkBoxDev")
         self.horizontalLayout.addWidget(self.checkBoxDev)
         self.checkBoxEtc = QtWidgets.QCheckBox(self.fileStatistics)
+        self.checkBoxEtc.setChecked(True)
         self.checkBoxEtc.setObjectName("checkBoxEtc")
         self.horizontalLayout.addWidget(self.checkBoxEtc)
         self.checkBoxHome = QtWidgets.QCheckBox(self.fileStatistics)
+        self.checkBoxHome.setChecked(True)
         self.checkBoxHome.setObjectName("checkBoxHome")
         self.horizontalLayout.addWidget(self.checkBoxHome)
         self.checkBoxOpt = QtWidgets.QCheckBox(self.fileStatistics)
+        self.checkBoxOpt.setChecked(True)
         self.checkBoxOpt.setObjectName("checkBoxOpt")
         self.horizontalLayout.addWidget(self.checkBoxOpt)
         self.checkBoxProc = QtWidgets.QCheckBox(self.fileStatistics)
+        self.checkBoxProc.setChecked(True)
         self.checkBoxProc.setObjectName("checkBoxProc")
         self.horizontalLayout.addWidget(self.checkBoxProc)
         self.checkBoxRun = QtWidgets.QCheckBox(self.fileStatistics)
+        self.checkBoxRun.setChecked(True)
         self.checkBoxRun.setObjectName("checkBoxRun")
         self.horizontalLayout.addWidget(self.checkBoxRun)
         self.checkBoxSys = QtWidgets.QCheckBox(self.fileStatistics)
+        self.checkBoxSys.setChecked(True)
         self.checkBoxSys.setObjectName("checkBoxSys")
         self.horizontalLayout.addWidget(self.checkBoxSys)
         self.checkBoxTmp = QtWidgets.QCheckBox(self.fileStatistics)
+        self.checkBoxTmp.setChecked(True)
         self.checkBoxTmp.setObjectName("checkBoxTmp")
         self.horizontalLayout.addWidget(self.checkBoxTmp)
         self.checkBoxUsr = QtWidgets.QCheckBox(self.fileStatistics)
+        self.checkBoxUsr.setChecked(True)
         self.checkBoxUsr.setObjectName("checkBoxUsr")
         self.horizontalLayout.addWidget(self.checkBoxUsr)
         self.checkBoxVar = QtWidgets.QCheckBox(self.fileStatistics)
+        self.checkBoxVar.setChecked(True)
         self.checkBoxVar.setObjectName("checkBoxVar")
         self.horizontalLayout.addWidget(self.checkBoxVar)
         self.verticalLayout.addLayout(self.horizontalLayout)
@@ -139,7 +150,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "iotrace-GUI", None, -1))
-        self.label.setText(QtWidgets.QApplication.translate("MainWindow", "<u>Filter:</u>", None, -1))
+        self.label.setText(QtWidgets.QApplication.translate("MainWindow", "<u>Filter out:</u>", None, -1))
         self.checkBoxBin.setText(QtWidgets.QApplication.translate("MainWindow", "/bin", None, -1))
         self.checkBoxDev.setText(QtWidgets.QApplication.translate("MainWindow", "/dev", None, -1))
         self.checkBoxEtc.setText(QtWidgets.QApplication.translate("MainWindow", "/etc", None, -1))
