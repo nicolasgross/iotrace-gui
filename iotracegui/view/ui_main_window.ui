@@ -80,7 +80,7 @@
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Filter:</string>
+           <string>&lt;u&gt;Filter:&lt;/u&gt;</string>
           </property>
          </widget>
         </item>
@@ -230,7 +230,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>29</height>
+     <height>32</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -246,6 +246,7 @@
      <string>Help</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionAboutQt"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuHelp"/>
@@ -273,6 +274,11 @@
   <action name="actionColumns">
    <property name="text">
     <string>Columns</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>About Qt</string>
    </property>
   </action>
  </widget>

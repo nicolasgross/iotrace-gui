@@ -21,7 +21,8 @@ class MainWindow (QMainWindow, Ui_MainWindow):
     def _initMenu(self):
         self.actionQuit.triggered.connect(self.close)
         self.actionOpen.triggered.connect(self._menuFileOpen)
-        # TODO help about
+        self.actionAbout.triggered.connect(self._menuHelpAbout)
+        self.actionAboutQt.triggered.connect(self._menuHelpAboutQt)
 
     def _initProcListView(self):
         self._removeAction = QAction("Remove", self)
@@ -94,3 +95,25 @@ class MainWindow (QMainWindow, Ui_MainWindow):
                 QMessageBox.warning(
                         self, "Warning", "Some files are already loaded:" +
                         os.linesep + os.linesep + str(e))
+
+    def _menuHelpAbout(self):
+        # TODO add text from README
+        # TODO add links
+        # TODO add copyright holder
+        # TODO add license
+        QMessageBox.about(self, "About", "<h3 align=center>iotrace-GUI</h3>" +
+                "<p align=center>1.0</p>" +
+                "<p align=center>TODO</p>" +
+                "<p align=center>" +
+                "<a href=https://github.com/nicolasgross/iotrace-gui>" +
+                "iotrace-GUI</a><br>" +
+                "<a href=https://github.com/nicolasgross/iotrace>iotrace</a>" +
+                "</p>" +
+                "<p align=center>Copyright © 2019 HLRS</p>" +
+                "<p>This program comes with absolutely no warranty. " +
+                "See the <a href=https://www.gnu.org/licenses/" +
+                "gpl-3.0-standalone.html>GNU General Public License, " +
+                "version 3</a> for details.</p>")
+
+    def _menuHelpAboutQt(self):
+        QMessageBox.aboutQt(self, "About Qt")

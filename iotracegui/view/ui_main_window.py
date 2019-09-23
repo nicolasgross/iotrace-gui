@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'ui_main_window.ui',
 # licensing of 'ui_main_window.ui' applies.
 #
-# Created: Thu Sep 19 14:46:00 2019
+# Created: Mon Sep 23 10:28:35 2019
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -100,7 +100,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.addWidget(self.tabs)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1000, 29))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1000, 32))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -117,10 +117,13 @@ class Ui_MainWindow(object):
         self.actionOpenRecent.setObjectName("actionOpenRecent")
         self.actionColumns = QtWidgets.QAction(MainWindow)
         self.actionColumns.setObjectName("actionColumns")
+        self.actionAboutQt = QtWidgets.QAction(MainWindow)
+        self.actionAboutQt.setObjectName("actionAboutQt")
         self.menuFile.addAction(self.actionOpen)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionQuit)
         self.menuHelp.addAction(self.actionAbout)
+        self.menuHelp.addAction(self.actionAboutQt)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuHelp.menuAction())
 
@@ -130,7 +133,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "iotrace-GUI", None, -1))
-        self.label.setText(QtWidgets.QApplication.translate("MainWindow", "Filter:", None, -1))
+        self.label.setText(QtWidgets.QApplication.translate("MainWindow", "<u>Filter:</u>", None, -1))
         self.checkBoxBin.setText(QtWidgets.QApplication.translate("MainWindow", "/bin", None, -1))
         self.checkBoxDev.setText(QtWidgets.QApplication.translate("MainWindow", "/dev", None, -1))
         self.checkBoxEtc.setText(QtWidgets.QApplication.translate("MainWindow", "/etc", None, -1))
@@ -153,4 +156,5 @@ class Ui_MainWindow(object):
         self.actionAbout.setText(QtWidgets.QApplication.translate("MainWindow", "About", None, -1))
         self.actionOpenRecent.setText(QtWidgets.QApplication.translate("MainWindow", "Open Recent", None, -1))
         self.actionColumns.setText(QtWidgets.QApplication.translate("MainWindow", "Columns", None, -1))
+        self.actionAboutQt.setText(QtWidgets.QApplication.translate("MainWindow", "About Qt", None, -1))
 
