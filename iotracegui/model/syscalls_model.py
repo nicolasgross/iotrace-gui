@@ -17,6 +17,9 @@ class SyscallsModel (QAbstractTableModel):
         super().__init__(parent)
         self._syscalls = syscalls
 
+    def getSyscalls(self):
+        return self._syscalls
+
     def rowCount(self, parent=QModelIndex()):
         return len(self._syscalls)
 

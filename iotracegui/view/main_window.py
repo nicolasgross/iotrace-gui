@@ -57,8 +57,13 @@ class MainWindow (QMainWindow, Ui_MainWindow):
 
     @Slot()
     def _mergeProcs(self):
-        # TODO
-        pass
+        selectedIndexes = self.processesListView.selectedIndexes()
+        selectedProcs = []
+        for index in selectedIndexes:
+            selectedProcs.append(self._model.getProcsModel().data(
+                index, Qt.ItemDataRole))
+        # TODO ask for (id, hostname, rank)
+        self._model.mergeAndAdd(('merge', 'host', '0'), selectedProcs)
 
     @Slot(QItemSelection, QItemSelection)
     def _updateContextMenuState(self, selected, deselected):

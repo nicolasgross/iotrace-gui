@@ -24,6 +24,23 @@ class Model:
                               fileStats['rank'])] = fileStats
         return newProcStats
 
+    def _createModels(self, proc, stat):
+        fstatsModel = FilestatsModel(stat['file statistics'])
+        proxyFstatsModel = CheckboxRegexSortFilterProxyTableModel()
+        proxyFstatsModel.setSourceModel(fstatsModel)
+        self._filestatModels[proc] = proxyFstatsModel
+
+        procRwBlocksModel = {}
+        for filestat in stat['file statistics']:
+            procRwBlocksModel[filestat['filename']] = \
+                RwBlocksModel(filestat)
+        self._rwBlocksModels[proc] = procRwBlocksModel
+
+        syscallsModel = SyscallsModel(stat['unmatched syscalls'])
+        proxyScModel = RegexSortFilterProxyTableModel()
+        proxyScModel.setSourceModel(syscallsModel)
+        self._syscallModels[proc] = proxyScModel
+
     def openFiles(self, files):
         if not files:
             return
@@ -40,21 +57,7 @@ class Model:
             raise AlreadyOpenError(str(alreadyOpen))
 
         for proc, stat in jsonFiles.items():
-            fstatsModel = FilestatsModel(stat['file statistics'])
-            proxyFstatsModel = CheckboxRegexSortFilterProxyTableModel()
-            proxyFstatsModel.setSourceModel(fstatsModel)
-            self._filestatModels[proc] = proxyFstatsModel
-
-            procRwBlocksModel = {}
-            for filestat in stat['file statistics']:
-                procRwBlocksModel[filestat['filename']] = \
-                    RwBlocksModel(filestat)
-            self._rwBlocksModels[proc] = procRwBlocksModel
-
-            syscallsModel = SyscallsModel(stat['unmatched syscalls'])
-            proxyScModel = RegexSortFilterProxyTableModel()
-            proxyScModel.setSourceModel(syscallsModel)
-            self._syscallModels[proc] = proxyScModel
+            self._createModels(proc, stat)
 
         self._procsModel.insertProcs(newProcs, self._procsModel.rowCount())
         self._procsModel.insertRows(self._procsModel.rowCount(), len(newProcs))
@@ -64,6 +67,105 @@ class Model:
         self._filestatModels.pop(proc)
         self._rwBlocksModels.pop(proc)
         self._syscallModels.pop(proc)
+
+    def _mergeSubFstat(self, mergeDict, statIndex, key, otherFstat):
+        mergeDict['file statistics'][statIndex][key][0] += otherFstat[key][0]
+        mergeDict['file statistics'][statIndex][key][1] += otherFstat[key][1]
+        if (mergeDict['file statistics'][statIndex][key][2] >
+                otherFstat[key][2]):
+            mergeDict['file statistics'][statIndex][key][2] = \
+                otherFstat[key][2]
+        if (mergeDict['file statistics'][statIndex][key][3] <
+                otherFstat[key][3]):
+            mergeDict['file statistics'][statIndex][key][3] = \
+                otherFstat[key][3]
+
+    def _mergeBlockstats(self, mergeDict, statIndex, key, otherFstat):
+        blkStatIndex = -1
+        for blockstat in otherFstat[key]:
+            for i, mergeBlockstat in enumerate(
+                    mergeDict['file statistics'][statIndex][key]):
+                if blockstat[0] == mergeBlockstat[0]:
+                    blkStatIndex = i
+                    break
+
+            if blkStatIndex == -1:
+                mergeDict['file statistics'][statIndex][key].append(
+                        [blockstat[0], 0])
+            mergeDict['file statistics'][statIndex][key][blkStatIndex][1] += \
+                blockstat[1]
+            blkStatIndex = -1
+
+    def _mergeFilestats(self, mergeDict, otherFilestats):
+        statIndex = -1
+        for otherFstat in otherFilestats:
+            for i, mergeFstat in enumerate(mergeDict['file statistics']):
+                if otherFstat['filename'] == mergeFstat['filename']:
+                    statIndex = i
+                    break
+
+            if statIndex == -1:
+                mergeDict['file statistics'].append({})
+                mergeDict['file statistics'][statIndex]['filename'] = \
+                    otherFstat['filename']
+                mergeDict['file statistics'][statIndex]['open'] = \
+                    [0, 0, 9999999999999, 0]
+                mergeDict['file statistics'][statIndex]['close'] = \
+                    [0, 0, 9999999999999, 0]
+                mergeDict['file statistics'][statIndex]['read'] = \
+                    [0, 0, 9999999999999.0, 0.0]
+                mergeDict['file statistics'][statIndex]['read-blocks'] = []
+                mergeDict['file statistics'][statIndex]['write'] = \
+                    [0, 0, 9999999999999.0, 0.0]
+                mergeDict['file statistics'][statIndex]['write-blocks'] = []
+
+            self._mergeSubFstat(mergeDict, statIndex, 'open', otherFstat)
+            self._mergeSubFstat(mergeDict, statIndex, 'close', otherFstat)
+            self._mergeSubFstat(mergeDict, statIndex, 'read', otherFstat)
+            self._mergeBlockstats(mergeDict, statIndex, 'read-blocks',
+                                  otherFstat)
+            self._mergeSubFstat(mergeDict, statIndex, 'write', otherFstat)
+            self._mergeBlockstats(mergeDict, statIndex, 'write-blocks',
+                                  otherFstat)
+            statIndex = -1
+
+    def _mergeSyscallstats(self, mergeDict, otherSyscalls):
+        scStatIndex = -1
+        for otherScStat in otherSyscalls:
+            for i, mergeScStat in enumerate(mergeDict['unmatched syscalls']):
+                if otherScStat['syscall'] == mergeScStat['syscall']:
+                    scStatIndex = i
+                    break
+
+            if scStatIndex == -1:
+                mergeDict['unmatched syscalls'].append({})
+                mergeDict['unmatched syscalls'][scStatIndex]['syscall'] = \
+                    otherScStat['syscall']
+                mergeDict['unmatched syscalls'][scStatIndex]['count'] = 0
+                mergeDict['unmatched syscalls'][scStatIndex]['total ns'] = 0
+            mergeDict['unmatched syscalls'][scStatIndex]['count'] += \
+                otherScStat['count']
+            mergeDict['unmatched syscalls'][scStatIndex]['total ns'] += \
+                otherScStat['total ns']
+            scStatIndex = -1
+
+    def mergeAndAdd(self, mergeProc, procs):
+        mergeDict = {}
+        mergeDict['trace-id'] = mergeProc[0]
+        mergeDict['hostname'] = mergeProc[1]
+        mergeDict['rank'] = mergeProc[2]
+        mergeDict['file statistics'] = []
+        mergeDict['unmatched syscalls'] = []
+        for proc in procs:
+            otherFilestatsModel = self.getFilestatsModel(proc)
+            otherFilestats = otherFilestatsModel.sourceModel().getFilestats()
+            otherSyscallModel = self.getSyscallsModel(proc)
+            otherSyscalls = otherSyscallModel.sourceModel().getSyscalls()
+            self._mergeFilestats(mergeDict, otherFilestats)
+            self._mergeSyscallstats(mergeDict, otherSyscalls)
+        self._createModels(mergeProc, mergeDict)
+        self._procsModel.insertProcs([mergeProc], self._procsModel.rowCount())
+        self._procsModel.insertRows(self._procsModel.rowCount(), 1)
 
     def getProcsModel(self):
         return self._procsModel

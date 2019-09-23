@@ -51,6 +51,9 @@ class FilestatsModel (QAbstractTableModel):
         super().__init__(parent)
         self._filestats = filestats
 
+    def getFilestats(self):
+        return self._filestats
+
     def rowCount(self, parent=QModelIndex()):
         return len(self._filestats)
 
