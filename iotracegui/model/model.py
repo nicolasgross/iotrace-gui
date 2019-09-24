@@ -10,10 +10,10 @@ from iotracegui.model.syscalls_model import SyscallsModel
 class Model:
 
     def __init__(self, files):
-        self._procsModel = ProcessesModel([])
-        self._filestatModels = {}  # (id, host, rank) -> filestatModel
-        self._rwBlocksModels = {}  # (id, host, rank) -> files -> blocksModel
-        self._syscallModels = {}  # (id, host, rank) -> syscallModel
+        self._procsModel = ProcessesModel()
+        self._filestatModels = {}   # (id, host, rank) -> filestatModel
+        self._rwBlocksModels = {}   # (id, host, rank) -> files -> blocksModel
+        self._syscallModels = {}    # (id, host, rank) -> syscallModel
 
     def _parseFiles(self, files):
         newProcStats = {}
@@ -48,25 +48,33 @@ class Model:
         jsonFiles = self._parseFiles(files)
         newProcs = [*jsonFiles]
         alreadyOpen = []
-        for oldProc in self._procsModel.getProcs():
+        for oldProcItem in self._procsModel.getProcs():
             for newProc in newProcs:
-                if oldProc == newProc:
-                    alreadyOpen.append(oldProc)
+                if oldProcItem.proc == newProc:
+                    alreadyOpen.append(oldProcItem.proc)
                     break
         if alreadyOpen:
             raise AlreadyOpenError(str(alreadyOpen))
 
         for proc, stat in jsonFiles.items():
             self._createModels(proc, stat)
+        self._procsModel.insertRows(self._procsModel.rowCount(), newProcs)
 
-        self._procsModel.insertProcs(newProcs, self._procsModel.rowCount())
-        self._procsModel.insertRows(self._procsModel.rowCount(), len(newProcs))
-
-    def removeProc(self, proc):
-        self._procsModel.removeProc(proc)
-        self._filestatModels.pop(proc)
-        self._rwBlocksModels.pop(proc)
-        self._syscallModels.pop(proc)
+    def removeProcs(self, indexedProcs):
+        indexedProcs.sort(reverse=True)
+        for index, procItem in indexedProcs:
+            childrenBackup = list(procItem.children)
+            parentIndex = self._procsModel.parent(index)
+            rowCount = self._procsModel.rowCount(index)
+            if rowCount > 0:
+                self._procsModel.removeRows(0, rowCount, index)  # children
+            self._procsModel.removeRows(index.row(), 1, parentIndex)  # parent
+            self._filestatModels.pop(procItem.proc)
+            self._rwBlocksModels.pop(procItem.proc)
+            self._syscallModels.pop(procItem.proc)
+            if childrenBackup:
+                procs = [p.proc for p in childrenBackup]
+                self._procsModel.insertRows(self._procsModel.rowCount(), procs)
 
     def _mergeSubFstat(self, mergeDict, statIndex, key, otherFstat):
         mergeDict['file statistics'][statIndex][key][0] += otherFstat[key][0]
@@ -149,23 +157,29 @@ class Model:
                 otherScStat['total ns']
             scStatIndex = -1
 
-    def mergeAndAdd(self, mergeProc, procs):
+    def mergeAndAdd(self, mergeProc, procs, indexes):
         mergeDict = {}
         mergeDict['trace-id'] = mergeProc[0]
         mergeDict['hostname'] = mergeProc[1]
         mergeDict['rank'] = mergeProc[2]
         mergeDict['file statistics'] = []
         mergeDict['unmatched syscalls'] = []
-        for proc in procs:
-            otherFilestatsModel = self.getFilestatsModel(proc)
+        for procItem in procs:
+            otherFilestatsModel = self.getFilestatsModel(procItem.proc)
             otherFilestats = otherFilestatsModel.sourceModel().getFilestats()
-            otherSyscallModel = self.getSyscallsModel(proc)
+            otherSyscallModel = self.getSyscallsModel(procItem.proc)
             otherSyscalls = otherSyscallModel.sourceModel().getSyscalls()
             self._mergeFilestats(mergeDict, otherFilestats)
             self._mergeSyscallstats(mergeDict, otherSyscalls)
         self._createModels(mergeProc, mergeDict)
-        self._procsModel.insertProcs([mergeProc], self._procsModel.rowCount())
-        self._procsModel.insertRows(self._procsModel.rowCount(), 1)
+        self._procsModel.insertRows(self._procsModel.rowCount(), [mergeProc])
+        indexes.sort(reverse=True)
+        for index in indexes:
+            self._procsModel.removeRows(index.row(), 1)
+        procs = [p.proc for p in procs]
+        parIndex = self._procsModel.index(self._procsModel.rowCount() - 1, 0)
+        self._procsModel.insertRows(self._procsModel.rowCount(parIndex), procs,
+                                    parIndex)
 
     def getProcsModel(self):
         return self._procsModel

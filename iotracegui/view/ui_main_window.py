@@ -3,7 +3,7 @@
 # Form implementation generated from reading ui file 'ui_main_window.ui',
 # licensing of 'ui_main_window.ui' applies.
 #
-# Created: Mon Sep 23 15:03:22 2019
+# Created: Tue Sep 24 15:27:57 2019
 #      by: pyside2-uic  running on PySide2 5.13.1
 #
 # WARNING! All changes made in this file will be lost!
@@ -13,8 +13,8 @@ from PySide2 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1000, 532)
-        MainWindow.setMinimumSize(QtCore.QSize(1000, 300))
+        MainWindow.resize(1200, 600)
+        MainWindow.setMinimumSize(QtCore.QSize(1200, 300))
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -26,13 +26,15 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setSpacing(5)
         self.horizontalLayout_4.setContentsMargins(5, 5, 5, 5)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.processesListView = QtWidgets.QListView(self.centralwidget)
-        self.processesListView.setEnabled(True)
-        self.processesListView.setMaximumSize(QtCore.QSize(350, 16777215))
-        self.processesListView.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-        self.processesListView.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-        self.processesListView.setObjectName("processesListView")
-        self.horizontalLayout_4.addWidget(self.processesListView)
+        self.processesTreeView = QtWidgets.QTreeView(self.centralwidget)
+        self.processesTreeView.setEnabled(True)
+        self.processesTreeView.setMinimumSize(QtCore.QSize(300, 0))
+        self.processesTreeView.setMaximumSize(QtCore.QSize(350, 16777215))
+        self.processesTreeView.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
+        self.processesTreeView.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.processesTreeView.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.processesTreeView.setObjectName("processesTreeView")
+        self.horizontalLayout_4.addWidget(self.processesTreeView)
         self.tabs = QtWidgets.QTabWidget(self.centralwidget)
         self.tabs.setObjectName("tabs")
         self.fileStatistics = QtWidgets.QWidget()
@@ -117,7 +119,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.addWidget(self.tabs)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1000, 32))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1200, 32))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -150,7 +152,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtWidgets.QApplication.translate("MainWindow", "iotrace-GUI", None, -1))
-        self.label.setText(QtWidgets.QApplication.translate("MainWindow", "<u>Filter out:</u>", None, -1))
+        self.label.setText(QtWidgets.QApplication.translate("MainWindow", "<u>Include:</u>", None, -1))
         self.checkBoxBin.setText(QtWidgets.QApplication.translate("MainWindow", "/bin", None, -1))
         self.checkBoxDev.setText(QtWidgets.QApplication.translate("MainWindow", "/dev", None, -1))
         self.checkBoxEtc.setText(QtWidgets.QApplication.translate("MainWindow", "/etc", None, -1))

@@ -16,7 +16,7 @@ class MainWindow (QMainWindow, Ui_MainWindow):
         self._model = model
         self._initMenu()
         self._initTabs()
-        self._initProcListView()
+        self._initProcTreeView()
 
     def _initMenu(self):
         self.actionQuit.triggered.connect(self.close)
@@ -24,61 +24,78 @@ class MainWindow (QMainWindow, Ui_MainWindow):
         self.actionAbout.triggered.connect(self._menuHelpAbout)
         self.actionAboutQt.triggered.connect(self._menuHelpAboutQt)
 
-    def _initProcListView(self):
+    def _initProcTreeView(self):
         self._removeAction = QAction("Remove", self)
         self._removeAction.setEnabled(False)
         self._removeAction.triggered.connect(self._removeProcs)
         self._mergeAction = QAction("Merge", self)
         self._mergeAction.setEnabled(False)
         self._mergeAction.triggered.connect(self._mergeProcs)
-        self.processesListView.addAction(self._removeAction)
-        self.processesListView.addAction(self._mergeAction)
-        self.processesListView.setModel(self._model.getProcsModel())
-        self.processesListView.selectionModel().selectionChanged. \
+        self.processesTreeView.addAction(self._removeAction)
+        self.processesTreeView.addAction(self._mergeAction)
+        self.processesTreeView.setModel(self._model.getProcsModel())
+        self.processesTreeView.selectionModel().selectionChanged. \
             connect(self._filestatsTab.showSelectedProc)
-        self.processesListView.selectionModel().selectionChanged. \
+        self.processesTreeView.selectionModel().selectionChanged. \
             connect(self._syscallsTab.showSelectedProc)
-        self.processesListView.selectionModel().selectionChanged. \
+        self.processesTreeView.selectionModel().selectionChanged. \
             connect(self._updateContextMenuState)
 
     @Slot()
     def _removeProcs(self):
-        selectedIndexes = self.processesListView.selectedIndexes()
-        selectedProcs = []
+        selectedIndexes = self.processesTreeView.selectedIndexes()
+        indexedProcs = []
         for index in selectedIndexes:
-            selectedProcs.append(self._model.getProcsModel().data(
-                index, Qt.ItemDataRole))
-        self.processesListView.clearSelection()
-        selectedIndexes.sort(reverse=True)
-        for index in selectedIndexes:
-            self._model.getProcsModel().removeRow(index.row())
-        for proc in selectedProcs:
-            self._model.removeProc(proc)
+            procItem = self._model.getProcsModel().data(index, Qt.ItemDataRole)
+            indexedProcs.append((index, procItem))
+        self.processesTreeView.clearSelection()
+        self._model.removeProcs(indexedProcs)
 
     @Slot()
     def _mergeProcs(self):
-        selectedIndexes = self.processesListView.selectedIndexes()
+        selectedIndexes = self.processesTreeView.selectedIndexes()
         selectedProcs = []
         for index in selectedIndexes:
             selectedProcs.append(self._model.getProcsModel().data(
                 index, Qt.ItemDataRole))
         merge_index = 0
-        trace_id = selectedProcs[0][0]
-        hostname = selectedProcs[0][1]
+        trace_id = selectedProcs[0].proc[0]
+        hostname = selectedProcs[0].proc[1]
         merge_proc = (trace_id + '_MERGE_' + str(merge_index), hostname,
                       'NULL')
-        while merge_proc in self._model.getProcsModel().getProcs():
+        procList = (p.proc for p in self._model.getProcsModel().getProcs())
+        while merge_proc in procList:
             merge_index += 1
             merge_proc = (trace_id + '_MERGE_' + str(merge_index), hostname,
                           'NULL')
-        self._model.mergeAndAdd(merge_proc, selectedProcs)
+        self._model.mergeAndAdd(merge_proc, selectedProcs, selectedIndexes)
+
+    def _containsParentOrChild(self, selectedIndexes):
+        for index in selectedIndexes:
+            procItem = index.internalPointer()
+            if procItem.parent or procItem.children:
+                return True
+        return False
+
+    def _containsChild(self, selectedIndexes):
+        for index in selectedIndexes:
+            procItem = index.internalPointer()
+            if procItem.parent:
+                return True
+        return False
 
     @Slot(QItemSelection, QItemSelection)
     def _updateContextMenuState(self, selected, deselected):
-        hasSelection = self.processesListView.selectionModel().hasSelection()
-        self._removeAction.setEnabled(hasSelection)
-        selectedIndexes = self.processesListView.selectedIndexes()
-        self._mergeAction.setEnabled(len(selectedIndexes) > 1)
+        selectedIndexes = self.processesTreeView.selectedIndexes()
+        hasSelection = self.processesTreeView.selectionModel().hasSelection()
+
+        removeEnabled = hasSelection and not \
+            self._containsChild(selectedIndexes)
+        self._removeAction.setEnabled(removeEnabled)
+
+        mergeEnabled = len(selectedIndexes) > 1 and not \
+            self._containsParentOrChild(selectedIndexes)
+        self._mergeAction.setEnabled(mergeEnabled)
 
     def _initTabs(self):
         self._filestatsTab = FilestatsTab(self, self._model)
@@ -115,7 +132,6 @@ class MainWindow (QMainWindow, Ui_MainWindow):
         # TODO add copyright holder
         # TODO add license
         QMessageBox.about(self, "About", "<h3 align=center>iotrace-GUI</h3>" +
-                "<p align=center>1.0</p>" +
                 "<p align=center>TODO</p>" +
                 "<p align=center>" +
                 "<a href=https://github.com/nicolasgross/iotrace-gui>" +

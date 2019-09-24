@@ -11,7 +11,6 @@ class BlocksDialog (QDialog, Ui_BlocksDialog):
         super().__init__()
         self.setupUi(self)
         self._blocksModel = blocksModel
-        windowTitle = ''
         if len(filename) > 33:
             windowTitle = filename[:15] + ' ... ' + filename[-15:]
         else:

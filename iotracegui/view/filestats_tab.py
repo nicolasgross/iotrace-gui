@@ -63,11 +63,11 @@ class FilestatsTab (QObject):
 
     @Slot(QModelIndex)
     def _openBlocksDialog(self, index):
-        selectedProcs = self._window.processesListView.selectedIndexes()
+        selectedProcs = self._window.processesTreeView.selectedIndexes()
         if len(selectedProcs) == 1:
             procsModel = self._model.getProcsModel()
             selectedProc = procsModel.data(selectedProcs[0], Qt.ItemDataRole)
-            filestatModel = self._model.getFilestatsModel(selectedProc)
+            filestatModel = self._model.getFilestatsModel(selectedProc.proc)
             filename = filestatModel.headerData(index.row(), Qt.Vertical,
                                                 Qt.ToolTipRole)
             if filename:
@@ -92,7 +92,7 @@ class FilestatsTab (QObject):
     def showSelectedProc(self, selected, deselected):
         self.disconnectSignals()
 
-        selectedProcs = self._window.processesListView.selectedIndexes()
+        selectedProcs = self._window.processesTreeView.selectedIndexes()
         if len(selectedProcs) != 1:
             self._window.filestatsTableView.setModel(None)
             return
@@ -100,7 +100,7 @@ class FilestatsTab (QObject):
         # connect new filestats model
         procsModel = self._model.getProcsModel()
         selectedProc = procsModel.data(selectedProcs[0], Qt.ItemDataRole)
-        filestatModel = self._model.getFilestatsModel(selectedProc)
+        filestatModel = self._model.getFilestatsModel(selectedProc.proc)
         self.checkboxesChanged.connect(filestatModel.setFilterCheckboxes)
         self._window.filestatsLineEdit.textChanged.connect(
                 filestatModel.setFilterRegularExpression)

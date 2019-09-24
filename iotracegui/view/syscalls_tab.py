@@ -27,7 +27,7 @@ class SyscallsTab:
     def showSelectedProc(self, selected, deselected):
         self.disconnectSignals()
 
-        selectedProcs = self._window.processesListView.selectedIndexes()
+        selectedProcs = self._window.processesTreeView.selectedIndexes()
         if len(selectedProcs) != 1:
             self._window.syscallsTableView.setModel(None)
             return
@@ -35,7 +35,7 @@ class SyscallsTab:
         # connect new syscalls model
         procsModel = self._model.getProcsModel()
         selectedProc = procsModel.data(selectedProcs[0], Qt.ItemDataRole)
-        syscallsModel = self._model.getSyscallsModel(selectedProc)
+        syscallsModel = self._model.getSyscallsModel(selectedProc.proc)
         self._window.syscallsLineEdit.textChanged.connect(
                  syscallsModel.setFilterRegularExpression)
         regex = self._window.syscallsLineEdit.text()
