@@ -13,3 +13,9 @@ TODO
 1. Change working directory to the repository's root
 2. `python -m iotracegui`
 
+
+## License
+
+Copyright © 2019 HLRS, University of Stuttgart. iotrace-GUI is published under
+the terms of GPL3.
+

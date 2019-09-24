@@ -1,3 +1,27 @@
+# Copyright (C) 2019 HLRS, University of Stuttgart
+# <https://www.hlrs.de/>, <https://www.uni-stuttgart.de/>
+#
+# This file is part of iotrace-GUI.
+#
+# iotrace-GUI is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# iotrace-GUI is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with iotrace-GUI.  If not, see <https://www.gnu.org/licenses/>.
+#
+# The following people contributed to the project (in alphabetic order
+# by surname):
+#
+# - Nicolas Gross <https://github.com/nicolasgross>
+
+
 import os
 from PySide2.QtWidgets import QFileDialog, QMainWindow, QMessageBox, QAction
 from PySide2.QtCore import Slot, QItemSelection, Qt
@@ -139,8 +163,8 @@ class MainWindow (QMainWindow, Ui_MainWindow):
                 "<a href=https://github.com/nicolasgross/iotrace>iotrace</a>" +
                 "</p>" +
                 "<p align=center>Copyright © 2019 HLRS</p>" +
-                "<p>This program comes with absolutely no warranty. " +
-                "See the <a href=https://www.gnu.org/licenses/" +
+                "<p align=center>This program comes with absolutely no " +
+                "warranty. See the <a href=https://www.gnu.org/licenses/" +
                 "gpl-3.0-standalone.html>GNU General Public License, " +
                 "version 3</a> for details.</p>")
 
