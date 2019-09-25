@@ -82,7 +82,7 @@ class ProcessesModel (QAbstractItemModel):
 
         if orientation == Qt.Horizontal:
             if section == 0:
-                return "Processes"
+                return "Traces"
             else:
                 return f"Column {section}"
         else:

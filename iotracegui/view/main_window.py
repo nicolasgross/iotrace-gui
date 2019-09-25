@@ -152,9 +152,6 @@ class MainWindow (QMainWindow, Ui_MainWindow):
 
     def _menuHelpAbout(self):
         # TODO add text from README
-        # TODO add links
-        # TODO add copyright holder
-        # TODO add license
         QMessageBox.about(self, "About", "<h3 align=center>iotrace-GUI</h3>" +
                 "<p align=center>TODO</p>" +
                 "<p align=center>" +
@@ -162,7 +159,8 @@ class MainWindow (QMainWindow, Ui_MainWindow):
                 "iotrace-GUI</a><br>" +
                 "<a href=https://github.com/nicolasgross/iotrace>iotrace</a>" +
                 "</p>" +
-                "<p align=center>Copyright © 2019 HLRS</p>" +
+                "<p align=center>Copyright © 2019 HLRS, University of " +
+                "Stuttgart</p>" +
                 "<p align=center>This program comes with absolutely no " +
                 "warranty. See the <a href=https://www.gnu.org/licenses/" +
                 "gpl-3.0-standalone.html>GNU General Public License, " +
